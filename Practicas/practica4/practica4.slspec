@@ -1,0 +1,244 @@
+∃
+
+Ejercicio 4
+i: Z
+A: seq<R>
+Q ≡ (∀j:Z)( 0≤j<|A| →L A[j]≥0 )
+
+b) 
+wp(A[i+2] := 0, Q)
+/* Def de setAt */
+= wp(setAt(A, i+2, 0), Q)
+/* Axioma1 */
+= def(A) ^ def(i+2) ^ def(0) ^L (∀j:Z)( 0≤j<|setAt(A, i+2, 0)| →L setAt(A, i+2, 0)[j]≥0 )
+/* |setAt(A, i+2, 0)| = |A| */
+= 0<=i+2<|A| ^L (∀j:Z)( 0≤j<|A| →L setAt(A, i+2, 0)[j]≥0 )
+/* separacion de j en casos j=i+2 y j!=i+2 */
+= 0<=i+2<|A| ^L (∀j:Z)( 0≤j<|A| ^ j=i+2 →L 0≥0 ) ^L (∀j:Z)( 0≤j<|A| ^ j!=i+2 →L setAt(A, i+2, 0)[j]≥0 )
+/* */
+= 0<=i+2<|A| ^L (0≤j<|A| ^ j=i+2 →L 0≥0) ^L (∀j:Z)( 0≤j<|A| ^ j!=i+2 →L setAt(A, i+2, 0)[j]≥0 )
+/* */                              T
+= 0<=i+2<|A| ^L (∀j:Z)( 0≤j<|A| ^ j!=i+2 →L A[j]≥0 )
+
+c)
+wp(A[i+2] := -1, Q)
+/* Def de setAt */
+= wp(setAt(A, i+2, -1), Q)
+/* Axioma1 */
+= def(i+2) ^ def(A) ^ def(-1) ^L (∀j:Z)( 0≤j<|setAt(A, i+2, -1)| →L setAt(A, i+2, -1)[j]≥0 )
+              T        T       
+/* |setAt(A, i+2, -1)| = |A| */
+= 0<=i+2<|A| ^L (∀j:Z)( 0≤j<|A| →L setAt(A, i+2, -1)[j]≥0 )
+/* separacion de casos j=i+2 y j!=i+2 */
+= 0<=i+2<|A| ^L ( 0<=j<|A| j=i+2 →L setAt(A, i+2, -1)[j]≥0 ) ^L (∀j:Z)( 0≤j<|A| ^ j!=i+2 →L setAt(A, i+2, -1)[j]≥0 )
+/* definicion de setAt */
+= 0<=i+2<|A| ^L ( j=i+2 →L -1≥0 ) ^L (∀j:Z)( 0≤j<|A| ^ j!=i+2 →L setAt(A, i+2, -1)[j]≥0 )
+= False
+
+d) 
+wp(A[i] := 2 * A[i], Q)
+/* Def de setAt */ 
+= wp(setAt(A, i, 2*A[i]), Q)
+/* Axioma1 */ 
+= def(i) ^ def(2*A[i]) ^L  (∀j:Z)( 0≤j<|setAt(A, i, 2*A[i])| →L setAt(A, i, 2*A[i])[j]≥0 )
+/* def(2*A[i]) = 0<=i<|A| */ 
+= 0<=i<|A| ^L (∀j:Z)( 0≤j<|A| →L setAt(A, i, 2*A[i])[j]≥0 )
+/* separacion en casos j= i/!=i */ 
+= 0<=i<|A| ^L (∀j:Z)( 0≤j<|A| ^ i=j →L setAt(A, i, 2*A[i])[j]≥0 ) ^L (∀j:Z)( 0≤j<|A| ^ i!=j →L setAt(A, i, 2*A[i])[j]≥0 )
+/* casos de setAt i=j e i!=j */ 
+= 0<=i<|A| ^L (∀j:Z)( 0≤j<|A| →L A[j]≥0 )
+
+e) 
+wp(A[i] := A[i-1], Q)
+/* Def de setAt */ 
+= wp(setAt(A, i, A[i-1]), Q)
+/* Axioma1 */ 
+= def(A) ^ def(i) ^ def(A[i-1]) ^L (∀j:Z)( 0≤j<|setAt(A, i, A[i-1])| →L setAt(A, i, A[i-1])[j]≥0 )
+/* def(A[i-1])  */
+= 0<=i-1<|A| ^L (∀j:Z)( 0≤j<|A| →L setAt(A, i, A[i-1])[j]≥0 )
+/* separacion en casos j=i-1/!=i-1  */
+= 0<=i-1<|A| 
+    ^L ( 0≤j<|A| ^ j=i-1 →L setAt(A, i, A[i-1])[j]≥0 ) 
+    ^L (∀j:Z)( 0≤j<|A| ^ j!=i-1 →L setAt(A, i, A[i-1])[j]≥0 )
+/* casos de setAt */
+= 0<=i-1<|A| ^L A[i-1]≥0 ^L (∀j:Z)( 0≤j<|A| ^ j!=i-1 →L A[j]≥0 )
+/* simplificacion logica */
+= 0<=i-1<|A| ^L (∀j:Z)( 0≤j<|A| →L A[j]≥0 )
+
+
+Ejercicio 7
+Calcular wp(S, Q), para los siguientes pares de programas S y postcondiciones Q.
+
+a)S≡
+    if(a<0)
+S1      b:=a
+    else
+S2      b:=−a
+    endif
+
+Q≡(b=−|a|)
+
+wp(S, Q)
+/* Axioma 4 */
+≡ def(a<0) ^L (( (a<0) ^ wp(S1, Q) ) v ( -(a<0) ^ wp(S2, Q) ))
+≡  T                   T                        T
+≡ true
+
+S1
+(a<0) ^ wp(S1, Q) ≡ (a<0) ^ wp(b:=a, b=−|a|) 
+/* Axioma 1 */
+≡ (a<0) ^ (def(a) ^L a=−|a|) ≡ (a<0) ^ (a = -|a|) ≡ true
+
+S2
+-(a<0) ^ wp(S2, Q) ≡ (a>=0) ^ wp(b:=-a, b=−|a|)
+/* Axioma 1 */
+≡ (a>=0) ^ (def(-a) ^ -a=−|a|) ≡ (a>=0)  ^ -a=−|a| ≡ true
+
+
+b)S≡
+    if(a<0)
+S1      b:=a
+    else
+S2      b:=−a
+    endif
+
+Q≡(b=|a|)
+
+wp(S, Q)
+/* Axioma 4 */
+≡ def(a<0) ^L (( (a<0) ^ wp(S1, Q) ) v ( -(a<0) ^ wp(S2, Q) ))
+≡ (a=0)
+
+S1
+(a<0) ^ wp(S1, Q) ≡ (a<0) ^ wp(b:=a, b=|a|) 
+/* Axioma 1 */
+≡ (a<0) ^ (def(a) ^L a=|a|) ≡ (a<0) ^ (a = |a|) ≡ false
+
+S2
+-(a<0) ^ wp(S2, Q) ≡ (a>=0) ^ wp(b:=-a, b=|a|)
+/* Axioma 1 */
+≡ (a>=0) ^ (def(-a) ^L -a=|a|) ≡ (a>=0)  ^L -a=|a| ≡ (a=0)
+
+
+d) S ≡ 
+        if (i>1)
+            s[i] := s[i-1]  ≡ S1
+        else
+            s[i] := 0       ≡ S2
+        endif
+
+    Q ≡ (∀j: ℤ)(1 ≤ j < |s| ->L s[j] = s[j-1])
+
+{P} S {Q}
+tengo que calcular la P mas debil
+
+wp(S, Q) 
+// Ax.4
+≡ def(i>1) ∧L ((B ∧ wp(S1, Q)) ∨ (¬B ∧ wp(S2, Q)))
+// La comparacion nunca se indefine
+≡ (B ∧ wp(S1, Q)) ∨ (¬B ∧ wp(S2, Q))
+
+calculo el primer termino E1 ≡ B ∧ wp(S1, Q)
+E1 ≡ i>1 ∧ wp( s[i] := s[i-1], (∀j: ℤ)(1 ≤ j < |s| ->L s[j] = s[j-1]) )
+// reemplazo de setAt
+≡ i>1 ∧ wp(setAt(s, i, s[i-1]), (∀j: ℤ)(1 ≤ j < |s| ->L s[j] = s[j-1]) )
+// Ax.1
+≡ i>1 ∧ def(s) ∧ def(i) ∧ def(s[i-1]) ∧L 
+    (∀j: ℤ)(1 ≤ j < |setAt(s, i, s[i-1])| ->L setAt(s, i, s[i-1])[j] = setAt(s, i, s[i-1])[j-1])
+// |setAt(s, i, s[i-1])| = |s| // asumimos que s esta definido
+≡ i>1 ∧ (0≤i<|s|) ∧ (0≤i-1<|s|) ∧L 
+    (∀j: ℤ)(1 ≤ j < |s| ->L setAt(s, i, s[i-1])[j] = setAt(s, i, s[i-1])[j-1])
+// sumo 1 a todo el 3er predicado
+≡ i>1 ∧ (0≤i<|s|) ∧ (1≤i<|s|+1) ∧L 
+    (∀j: ℤ)(1 ≤ j < |s| ->L setAt(s, i, s[i-1])[j] = setAt(s, i, s[i-1])[j-1])
+// simplifico el 1er, 2do y 3er predicado
+≡ (1<i<|s|) ∧L 
+    (∀j: ℤ)(1≤j<|s| ->L setAt(s, i, s[i-1])[j] = setAt(s, i, s[i-1])[j-1])
+// seaparo en casos i=j e i≠j
+≡ (1<i<|s|) ∧L 
+    (∀j: ℤ)(1≤j<|s| ∧ i≠j ->L setAt(s, i, s[i-1])[j] = setAt(s, i, s[i-1])[j-1]) ∧ 
+    (1≤j<|s| ∧ i=j ->L setAt(s, i, s[i-1])[j] = setAt(s, i, s[i-1])[j-1])
+// propiedades de setAt
+≡ (1<i<|s|) ∧L (∀j: ℤ)(1≤j<|s| ∧ i≠j ->L s[j] = s[j-1]) ∧ (1≤j<|s| ∧ i=j ->L s[i-1] = s[i-1])
+
+calculo el segundo termino E2 ≡ ¬B ∧ wp(S2, Q)
+E2 ≡ ¬(i>1) ∧ wp( s[i] := 0, (∀j: ℤ)(1 ≤ j < |s| ->L s[j] = s[j-1]) )
+// reemplazo por setAt
+E2 ≡ ¬(i>1) ∧ wp(setAt(s, i, 0), (∀j: ℤ)(1 ≤ j < |s| ->L s[j] = s[j-1]))
+// Ax.1
+E2 ≡ ¬(i>1) ∧ def(s) ∧ def(i) ∧ def(0) ∧L (∀j: ℤ)(1 ≤ j < |setAt(s, i, 0)| ->L setAt(s, i, 0)[j] = setAt(s, i, 0)[j-1]))
+// simplificacion de defs
+E2 ≡ (i≤1) ∧ (0≤i<|s|) ∧L (∀j: ℤ)(1 ≤ j < |setAt(s, i, 0)| ->L setAt(s, i, 0)[j] = setAt(s, i, 0)[j-1]))
+// 1er y 2do termino
+E2 ≡ (0 ≤ i ≤ 1 <2 |s|) ∧L (∀j: ℤ)(1 ≤ j < |setAt(s, i, 0)| ->L setAt(s, i, 0)[j] = setAt(s, i, 0)[j-1]))
+ 
+    hasta aca llegue, medio que no se como seguir :(
+
+
+e) 
+S ≡
+    if (s[i]<0)
+        s[i]:=-s[i]     ≡ S1
+    else 
+        skip            ≡ S2
+    endif
+
+Q ≡ 0 ≤ i < |s| ∧L s[i]≥0
+
+wp(S, Q) 
+// Ax.4
+≡ def(s[i]<0) ∧L ((B ∧ wp(S1, Q)) ∨ (¬B ∧ wp(S2, Q)))
+// def(B)
+≡ 0≤i<|s| ∧L ((B ∧ wp(S1, Q)) ∨ (¬B ∧ wp(S2, Q)))
+
+resuelvo E1 ≡ (B ∧ wp(S1, Q))
+≡ (s[i]<0) ∧ wp(s[i]:=-s[i], 0≤i<|s| ∧L s[i]≥0)
+// reemplazo setAt
+≡ (s[i]<0) ∧ wp(setAt(s, i, -s[i]), 0≤i<|s| ∧L s[i]≥0)
+// Ax.1
+≡ (s[i]<0) ∧ def(setAt(s, i, -s[i])) 
+    ∧L 0 ≤ i < |setAt(s, i, -s[i])| 
+    ∧L setAt(s, i, -s[i])[i]≥0
+// def de setAt, |setAt()|
+≡ (s[i]<0) ∧ 0≤i<|s| 
+    ∧L 0≤i<|s| 
+    ∧L setAt(s, i, -s[i])[i]≥0
+// setAt(s, i, x)[i] = x
+≡ (s[i]<0) ∧L 0≤i<|s| ∧L -s[i]≥0
+// multiplico el 3er termino por -1
+≡ (s[i]<0) ∧L 0≤i<|s| ∧L s[i]<0
+// q^q=q
+≡ 0≤i<|s| ∧L s[i]<0
+
+resuelvo E2 ≡ (¬B ∧ wp(S2, Q))
+≡ ¬(s[i]<0) ∧ wp(skip, 0≤i<|s| ∧L s[i]≥0)
+// negacion de comparacion
+≡ s[i]≥0 ∧ wp(skip, 0≤i<|s| ∧L s[i]≥0)
+// Ax.2 (skip)
+≡ s[i]≥0 ∧ 0≤i<|s| ∧L s[i]≥0
+// q^q=q
+≡ 0≤i<|s| ∧L s[i]≥0
+
+reemplazo E1 y E2 en wp(S, Q)
+≡ 0≤i<|s| ∧L ((0≤i<|s| ∧L s[i]<0) ∨ (0≤i<|s| ∧L s[i]≥0))
+// hago reemplazo por variables
+≡ p ∧L ((p ∧ q) ∨ (p ∧ ¬q))
+// distributiva ^L
+≡ ((p ∧L (p ∧ q)) ∨ (p ∧L (p ∧ ¬q)))
+// 
+≡ (((p ∧L p) ∧ q) ∨ ((p ∧L p) ∧ ¬q))
+// p^p=p
+≡ ((p ∧L q) ∨ (p ∧L ¬q))
+// ascociativa ^
+≡ p ∧L (q ∨ ¬q)
+// reemplazo de nuevo por los valores originales
+≡ 0≤i<|s| ∧L (s[i]<0 ∨ s[i]≥0)
+
+// NO ME DIO, TENIA QUE DAR 
+// 0<=i<|s| 
+
+
+
+
+
+

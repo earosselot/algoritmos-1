@@ -1,0 +1,14 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/earosselot/Documents/Algo1/Labo/Algoritmos1-Laboratorio/main.cpp
+iostream
+-
+math.h
+-
+

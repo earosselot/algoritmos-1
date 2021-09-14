@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/Algoritmos1_Laboratorio.dir/main.cpp.o -o Algoritmos1_Laboratorio 
