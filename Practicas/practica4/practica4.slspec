@@ -231,11 +231,11 @@ reemplazo E1 y E2 en wp(S, Q)
 ≡ ((p ∧L q) ∨ (p ∧L ¬q))
 // ascociativa ^
 ≡ p ∧L (q ∨ ¬q)
+           T
 // reemplazo de nuevo por los valores originales
-≡ 0≤i<|s| ∧L (s[i]<0 ∨ s[i]≥0)
+≡ 0≤i<|s|
 
-// NO ME DIO, TENIA QUE DAR 
-// 0<=i<|s| 
+
 
 
 
