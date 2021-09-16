@@ -1,0 +1,100 @@
+Ejercicio 7.
+Resuelto en clase con Tomas.
+
+Pre { |s|=r ∧ r=r0 }
+Post { |s|=|r| ∧L (∀j:ℤ)(0≤j<|s| ⟹L s[j]=r[j]) }
+
+i:=0;
+while (i < |s|) do
+  r[i]:=s[i];
+  i:=i+1;
+endwhile
+
+7.a) Escribir la precondicion del ciclo (Pc) y la postcondicion del ciclo (Qc).
+
+Pc ≡ todo lo que sabemos hasta el momento en que empieza el ciclo.
+Pc ≡ la Pre y las instrucciones antes del ciclo 
+            (a no ser que las instrucciones modifiquen la Pre, en ese caso hay
+              que tener cuidado)
+el r0 esta medio al pedo en este ejercicio, la ponemos por las dudas...
+
+Pc ≡ |s|=r ∧ r=r0 ∧ i=0
+
+
+Qc ≡ que hace falta tener cuando termina el ciclo para que se cumpla la Post.
+en este caso no hay instrucciones despues del ciclo, entonces es solo la Post.
+Si hay cosas, es wp(S2, Post).
+
+Qc ≡ |s|=|r| ∧L (∀j:ℤ)(0≤j<|s| ⟹L s[j]=r[j])
+
+7.b) Proponer un invariante y demostrar que el ciclo es parcialmente correcto.
+queremos ver que(qvq):
+  1. Pc ⟹ I
+  2. {I ∧ B} S {I}
+  3. I y ¬B ⟹ Qc
+
+I ≡ variable del ciclo ∧ estado intermedio de la solucion.
+I ≡ (0≤i≤|s| ∧ |s|=|r|) ∧L (∀j:ℤ)(0≤j<i ⟹L s[j]=r[j])
+el primer termino llava un menor-igual que |s| porque el inveriante tiene que valer cuando
+termina el ciclo.
+
+  1. Pc ⟹ I
+    |s|=r ∧ r=r0 ∧ i=0 ⟹ (0≤i≤|s| ∧ |s|=|r|) ∧L (∀j:ℤ)(0≤j<i ⟹L s[j]=r[j])
+      Suponiendo Pc:
+        (0≤i≤|s| ∧ |s|=|r|) vale porque i=0 (y claramente |s|≥0)
+        (∀j:ℤ)(0≤j<i ⟹L s[j]=r[j]) vale porque 0≤j<i es siempre False para i=0, entonces siempre es True.
+      Entonces, se cumple 1.
+  
+  2. {I ∧ B} S {I}
+    (I ∧ B) ⟹ wp(S, I) (por definicion de tripla de Hoare)
+    wp(r[i]:=s[i]; i:=i+1, (0≤i≤|s| ∧ |s|=|r|) ∧L (∀j:ℤ)(0≤j<i ⟹L s[j]=r[j]))
+    // Ax.3
+    wp(r[i]:=s[i], wp(i:=i+1, (0≤i≤|s| ∧ |s|=|r|) ∧L (∀j:ℤ)(0≤j<i ⟹L s[j]=r[j])))
+    // Ax.1
+    wp(r[i]:=s[i], def(i+1) ∧L (0≤i+1≤|s| ∧ |s|=|r|) ∧L (∀j:ℤ)(0≤j<i+1 ⟹L s[j]=r[j]))  
+    // def = true        
+    wp(r[i]:=s[i], (0≤i+1≤|s| ∧ |s|=|r|) ∧L (∀j:ℤ)(0≤j<i+1 ⟹L s[j]=r[j]))  
+    // transformacion a setAt
+    wp(r:=setAt(r,i,s[i]), (0≤i+1≤|s| ∧ |s|=|r|) ∧L (∀j:ℤ)(0≤j<i+1 ⟹L s[j]=r[j])) 
+    // Ax.1 el |r| no lo reemplazo porque da igual
+    def(setAt(r,i,s[i])) ∧L (0≤i+1≤|s| ∧ |s|=|r|) ∧L (∀j:ℤ)(0≤j<i+1 ⟹L s[j] = setAt(r,i,s[i])[j] )
+    // def
+    0≤i<|s| ∧ 0≤i<|r| ∧L (0≤i+1≤|s| ∧ |s|=|r|) ∧L (∀j:ℤ)(0≤j<i+1 ⟹L s[j] = setAt(r,i,s[i])[j] ) 
+    // extraigo el caso j=i del para todo 
+    0≤i<|s| ∧ 0≤i<|r| ∧L (0≤i+1≤|s| ∧ |s|=|r|) ∧L
+      (∀j:ℤ)(0≤j<i+1 ⟹L s[j] = setAt(r,i,s[i])[j]) ∧ 
+      s[i] = setAt(r,i,s[i])[i]  
+    // aplico los reemplazos de setAt cuando j=1 y j!=i
+    0≤i<|s| ∧ 0≤i<|r| ∧L (0≤i+1≤|s| ∧ |s|=|r|) ∧L
+      (∀j:ℤ)(0≤j<i ⟹L s[j] = r[j]) ∧ 
+      s[i] = s[i] (true)
+    // 
+    0≤i<|s| ∧ 0≤i<|r| ∧L (0≤i+1≤|s| ∧ |s|=|r|) ∧L
+      (∀j:ℤ)(0≤j<i ⟹L s[j] = r[j])     
+      
+    // Pasos extra
+    (0≤i<|s| ∧ |s|=|r| ) ∧L (∀j:ℤ)(0≤j<i ⟹L s[j] = r[j]) 
+    
+    I ≡ (0≤i≤|s| ∧ |s|=|r|) ∧L (∀j:ℤ)(0≤j<i ⟹L s[j]=r[j])
+    B ≡ i < |s|
+
+    Veamos que I y B implica wp
+    0≤i<|s| vale por 0<=i<=|s| en Invariante y i<|s| en B
+    |s|=|r| vale por |s|=|r| en I
+    (∀j:ℤ)(0≤j<i ⟹L s[j] = r[j]) vale porque esta en I sintacticamente igual.
+  
+  3. I y ¬B ⟹ Qc
+
+  Qc ≡ |s|=|r| ∧L (∀j:ℤ)(0≤j<|s| ⟹L s[j]=r[j])
+
+  I ≡ (0≤i≤|s| ∧ |s|=|r|) ∧L (∀j:ℤ)(0≤j<i ⟹L s[j]=r[j])
+  ¬B ≡ i ≥ |s|
+
+  |s|=|r| vale por |s|=|r| en el Invariante.
+  (∀j:ℤ)(0≤j<|s| ⟹L s[j]=r[j]) vale porque (i ≥ |s| ∧ i≤|s|) implica i=|s|
+      entonces es igual a (∀j:ℤ)(0≤j<i ⟹L s[j]=r[j]).
+  El termino del para todo, es muuuy parecido pero sin i=|s|
+
+
+7.c) Proponer una funcion variante que permita demostrar que el ciclo termina.
+
