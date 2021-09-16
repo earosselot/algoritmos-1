@@ -1,10 +1,33 @@
+#include <cmath>
 #include <iostream>
 #include <vector>
 
 using namespace std;
 
 vector<int> rotar(vector<int> v, int k){
-    /* COMPLETAR */
+    // Dado un vector v y un entero k, rotar k posiciones los elementos de v.
+    // [1,2,3,4,5,6] rotado 2, deberia dar [3,4,5,6,1,2].
+    vector<int> res(v.size());
+    int size = v.size();
+
+    // normalizo k, para que este en el rango [0, v.size()]
+    if (size < k) {
+        k = k % size;
+    }
+    if (k < 0) {
+        k = abs(abs(k % size) - size);
+    }
+	
+	// algoritmo que rota si k esta en el rango [0, v.size()]
+	for (int i = 0; i < size; i++) {
+	  if (i+k < size) {
+	    res[i+k] = v[i]; 
+	  } else {
+	    res[i+k-size] = v[i];
+	  }
+	}
+	
+	return res;
 }
 
 int main() {
