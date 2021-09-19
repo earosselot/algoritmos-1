@@ -141,7 +141,7 @@ wp(S, Q)
 calculo el primer termino E1 ≡ B ∧ wp(S1, Q)
 E1 ≡ i>1 ∧ wp( s[i] := s[i-1], (∀j: ℤ)(1 ≤ j < |s| ->L s[j] = s[j-1]) )
 // reemplazo de setAt
-≡ i>1 ∧ wp(setAt(s, i, s[i-1]), (∀j: ℤ)(1 ≤ j < |s| ->L s[j] = s[j-1]) )
+≡ i>1 ∧ wp(s := setAt(s, i, s[i-1]), (∀j: ℤ)(1 ≤ j < |s| ->L s[j] = s[j-1]) )
 // Ax.1
 ≡ i>1 ∧ def(s) ∧ def(i) ∧ def(s[i-1]) ∧L 
     (∀j: ℤ)(1 ≤ j < |setAt(s, i, s[i-1])| ->L setAt(s, i, s[i-1])[j] = setAt(s, i, s[i-1])[j-1])
@@ -156,6 +156,15 @@ E1 ≡ i>1 ∧ wp( s[i] := s[i-1], (∀j: ℤ)(1 ≤ j < |s| ->L s[j] = s[j-1]) 
     (∀j: ℤ)(1≤j<|s| ->L setAt(s, i, s[i-1])[j] = setAt(s, i, s[i-1])[j-1])
 // seaparo en casos i=j e i≠j
 ≡ (1<i<|s|) ∧L 
+    (∀j: ℤ)(1≤j<|s| ->L setAt(s, i, s[i-1])[j] = setAt(s, i, s[i-1])[j-1]) 
+    ∧ setAt(s, i, s[i-1])[i] = setAt(s, i, s[i-1])[i-1]
+// propiedades de setAt
+≡ (1<i<|s|) ∧L 
+    (∀j: ℤ)(1≤j<|s| ->L s[j] = setAt(s, i, s[i-1])[j-1]) 
+    ∧ setAt(s, i, s[i-1])[i] = setAt(s, i, s[i-1])[i-1]
+
+// seaparo en casos i=j e i≠j
+≡ (1<i<|s|) ∧L 
     (∀j: ℤ)(1≤j<|s| ∧ i≠j ->L setAt(s, i, s[i-1])[j] = setAt(s, i, s[i-1])[j-1]) ∧ 
     (1≤j<|s| ∧ i=j ->L setAt(s, i, s[i-1])[j] = setAt(s, i, s[i-1])[j-1])
 // propiedades de setAt
@@ -164,7 +173,7 @@ E1 ≡ i>1 ∧ wp( s[i] := s[i-1], (∀j: ℤ)(1 ≤ j < |s| ->L s[j] = s[j-1]) 
 calculo el segundo termino E2 ≡ ¬B ∧ wp(S2, Q)
 E2 ≡ ¬(i>1) ∧ wp( s[i] := 0, (∀j: ℤ)(1 ≤ j < |s| ->L s[j] = s[j-1]) )
 // reemplazo por setAt
-E2 ≡ ¬(i>1) ∧ wp(setAt(s, i, 0), (∀j: ℤ)(1 ≤ j < |s| ->L s[j] = s[j-1]))
+E2 ≡ ¬(i>1) ∧ wp(s := setAt(s, i, 0), (∀j: ℤ)(1 ≤ j < |s| ->L s[j] = s[j-1]))
 // Ax.1
 E2 ≡ ¬(i>1) ∧ def(s) ∧ def(i) ∧ def(0) ∧L (∀j: ℤ)(1 ≤ j < |setAt(s, i, 0)| ->L setAt(s, i, 0)[j] = setAt(s, i, 0)[j-1]))
 // simplificacion de defs
@@ -235,6 +244,119 @@ reemplazo E1 y E2 en wp(S, Q)
 // reemplazo de nuevo por los valores originales
 ≡ 0≤i<|s|
 
+f)
+S ≡ 
+  if (s[i] > 0)
+    s[i] := -s[i];    ≡ S1
+  else
+    skip              ≡ S2
+  endif
+
+Q ≡ (∀j: ℤ)(0<= j < |s| ⟹L s[j] >= 0)
+
+Calcular wp para el programa S y las postcondiciones Q.
+
+wp(S, Q) ≡ def(s[i] > 0) ∧L ((B ∧ wp(S1, Q)) ∨ (¬B ∧ wp(S2, Q)))
+
+def(s[i] > 0) ≡ 0≤i<|s|
+
+calculo E1 ≡ (B ∧ wp(S1, Q))
+  ≡ (s[i] > 0) ∧ wp(s[i] := -s[i], (∀j: ℤ)(0<= j < |s| ⟹L s[j] >= 0))
+  // reemplazo por setAt
+  ≡ (s[i] > 0) ∧ wp(s[i] := setAt(s, i, -s[i]), (∀j: ℤ)(0<= j < |s| ⟹L s[j] >= 0))
+  // Axioma1
+  ≡ (s[i] > 0) ∧ def(setAt(s, i, -s[i])) ∧L (∀j: ℤ)(0<= j < |setAt(s, i, -s[i])| ⟹L setAt(s, i, -s[i])[j] >= 0))
+  // resuelvo def()
+  ≡ (s[i] > 0) ∧ 0<=i<|s| ∧L (∀j: ℤ)(0<= j < |setAt(s, i, -s[i])| ⟹L setAt(s, i, -s[i])[j] >= 0))
+  // |setAt|
+  ≡ (s[i] > 0) ∧ 0<=i<|s| ∧L (∀j: ℤ)(0<= j < |s| ⟹L setAt(s, i, -s[i])[j] >= 0))
+  // extraigo del forall caso i=j
+  ≡ (s[i] > 0) ∧ 0<=i<|s| ∧L (∀j: ℤ)(0<= j < |s| ⟹L setAt(s, i, -s[i])[j] >= 0)) ∧ setAt(s, i, -s[i])[i] >= 0
+  // propiedades de setAt
+  ≡ (s[i] > 0) ∧ 0<=i<|s| ∧L (∀j: ℤ)(0<= j < |s| ⟹L s[j] >= 0)) ∧ -s[i] >= 0
+  // reorganizo                                                        s[i] <= 0
+  ≡ 0<=i<|s| ∧L (∀j: ℤ)(0<= j < |s| ⟹L s[j] >= 0)) ∧ s[i]<=0 ∧ (s[i] > 0)
+  // 3er y 4to termino = False
+  ≡ false
+
+calculo E2 ≡ (¬B ∧ wp(S2, Q))
+  ≡ s[i] <= 0 ∧ wp(skip, (∀j: ℤ)(0<= j < |s| ⟹L s[j] >= 0))
+  // Axioma 2
+  ≡ s[i] <= 0 ∧ (∀j: ℤ)(0<= j < |s| ⟹L s[j] >= 0) 
+  // extraigo el caso j=i
+  ≡ s[i] <= 0 ∧ (∀j: ℤ)(0<= j < |s| ⟹L s[j] >= 0) ∧ s[i] >= 0
+  // del primer y ultimo termino
+  ≡ s[i] = 0 ∧ (∀j: ℤ)(0<= j < |s| ⟹L s[j] >= 0)
+
+junto todo de vuelta
+  wp(S, Q) ≡ 0≤i<|s| ∧L (false ∨ (s[i] = 0 ∧ (∀j: ℤ)(0<= j < |s| ⟹L s[j] >= 0)))
+  ≡ 0≤i<|s| ∧L (s[i] = 0 ∧ (∀j: ℤ)(0<= j < |s| ⟹L s[j] >= 0))
+
+
+Ejercicio 8
+Escribir programas paras los siguentes problemas y demostrar formalmente su correccione
+usando la precondicion mas debil.
+
+a)
+proc problema1 (in s: seq<ℤ>, in i: ℤ, inout a: ℤ) {
+    Pre {0<=i<|s| ∧L a = ∑(j=0, i-1) s[j]}
+    Post {a = ∑(j=0, i) s[j]}
+}
+
+S ≡ a := a + s[i];
+
+wp(S, Q) 
+  ≡ wp(a := a + s[i], a = ∑(j=0, i) s[j])
+  // Axioma 1
+  ≡ def(a + s[i]) ∧L a + s[i] = ∑(j=0, i) s[j]
+  // resuelvo def
+  ≡ 0<=i<|s| ∧L a + s[i] = ∑(j=0, i) s[j]
+  // paso s[i] restando en el segundo termino
+  ≡ 0<=i<|s| ∧L a = ∑(j=0, i) s[j] - s[i]
+  // Propiedades de sumatoria
+  ≡ 0<=i<|s| ∧L a = ∑(j=0, i-1) s[j]
+
+Pre ⟹ wp(S, Q) ya que son equivalentes.
+Por lo tanto el programa es correcto respecto de la especificacion.
+
+b)
+proc problema2 (in s: seq<ℤ>, in i: ℤ, inout a: ℤ) {
+    Pre {0<=i<|s| ∧L a = ∑(j=0, i) s[j]}
+    Post {a = ∑(j=1, i) s[j]}
+}
+
+Recibiendo una secuencia, un indice de la secuencia y un entero que equivale
+a la suma de todos los valores de la secuencia hasta el indice i (inclusive),
+quiero un programa que me devuelve la suma de los valores de la secuencia
+desde el segundo hasta el i(inclusive).
+
+S ≡ a := a - s[0];
+
+wp(S, Q)
+  ≡ wp(a := a - s[0], a = ∑(j=1, i) s[j])
+  // Axioma 1
+  ≡ def(a - s[0]) ∧L a - s[0] = ∑(j=1, i) s[j]
+  // resuelvo def
+  ≡ 1 <= |s| ∧L a - s[0] = ∑(j=1, i) s[j]
+  // paso el s[0] sumando en el segundo termino
+  ≡ 1 <= |s| ∧L a = ∑(j=1, i) s[j] + s[0]
+  // Propiedades de la sumatoria
+  ≡ 1 <= |s| ∧L a = ∑(j=0, i) s[j]
+
+Pre ⟹ wp(S, Q)
+  0<=i<|s| ∧L a = ∑(j=0, i) s[j] ⟹ 1 <= |s| ∧L a = ∑(j=0, i) s[j]
+  el segundo termino es igaul, la implicacion es trivial
+  el primer termino de la Pre lo podemos escribir como:
+    0<=i ∧ i<|s|
+    // por transitividad
+    0<|s| ≡ 1<=|s|
+    los terminos son identicos, por lo tanto la implicacion es trivial.
+
+d)
+proc problema4 (in s: seq<ℤ>, in i: ℤ, inout a: ℤ) {
+    
+}
+    
 
 
 

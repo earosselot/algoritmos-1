@@ -1,3 +1,136 @@
+Ejercicio 1.
+
+Problema: sumar los elementos de un arreglo.
+
+Especificacion:
+  proc sumar(in s: seq ⟨ℤ⟩, out result: ℤ) {
+    pre {true}
+    post {result = (∑ j = 0, |s|-1,)(s[j])} 
+  };
+
+Implementacion:
+  result := 0;
+  i := 0;
+  while (i < s.size()) do {
+    result := result + s[i];
+    i := i + 1;
+  }
+
+Invariante del ciclo:
+  I ≡ 0<=i<=|s| ∧L result = (∑ j = 0, i-1)(s[j])
+
+a) Escribir la precondicion y la postcondicion del ciclo.
+
+  Precondicion del ciclo:
+    Pc ≡ { result = 0 ∧ i = 0 }
+  Postcondicion del ciclo:
+    Qc ≡ { result = (∑ j = 0, |s|-1,)(s[j]) }
+
+e) Demostrar formalmente la correccion parcial del ciclo, usando los primeros puntos del teorema del
+    invariante.
+    
+  2) Demostracion torema invariante
+
+  1. Pc ⟹ I
+  2. {I ∧ B} S {I}
+  3. I ∧ ¬B ⟹ Qc
+  4. {I ∧ B ∧ v₀ = fv} S {fv < v₀}
+  5. I ∧ fv ≤ 0 ⟹ ¬B
+  6. {P} while B do S endwhile {Qc}
+
+    1. Pc ⟹ I
+      0<=i<=|s| es valido porque i=0
+      si i=0 entonces (∑ j=0, i-1)(s[j]) ≡ (∑ j=0, 0)(s[j]) = 0
+      y result=0, por lo tanto el la Pc implica a I.
+    
+    2. {I ∧ B} S {I}
+      {I ∧ B} ⟹ wp(S, I)  // por definicion de la tripla de Hoare
+      claculo wp(S, I)
+      wp(result := result + s[i]; i := i + 1, 0<=i<=|s| ∧L result = (∑ j=0, i-1)(s[j]) )
+      // Axioma3
+      ≡ wp(result := result + s[i], wp(i := i + 1, 0<=i<=|s| ∧L result = (∑ j=0, i-1)(s[j])))
+      // Axioma1
+      ≡ wp(result := result + s[i], def(i+1) ∧L  0<=i + 1<=|s| ∧L result = (∑ j=0, i+1-1)(s[j]))
+      // Axioma1
+      ≡ def(result + s[i]) ∧L  0<=i+1<=|s| ∧L result + s[i] = (∑ j=0, i+1-1)(s[j])
+      // def(s[i])
+      ≡ 0<=i<|s| ∧L -1<=i<=|s|-1 ∧L result + s[i] = (∑ j=0, i+1-1)(s[j])
+      // simplifico los dos primeros terminos
+      ≡ 0<=i<|s| ∧L result + s[i] = (∑ j=0, i)(s[j])
+      // paso s[i] restando
+      ≡ 0<=i<|s| ∧L result = (∑ j=0, i)(s[j]) - s[i]
+      // definicion de sumatoria
+      ≡ 0<=i<|s| ∧L result = (∑ j=0, i-1)(s[j])
+
+      I ≡ 0<=i<=|s| ∧L result = (∑ j=0, i-1)(s[j])
+      B ≡ i < |s|
+
+      I ∧ B ≡ 0<=i<|s| ∧L result = (∑ j=0, i-1)(s[j])
+
+      {I ∧ B} es exactamente wp(S, I), la implicacion es trivial.
+
+    3. I ∧ ¬B ⟹ Qc
+      I ≡ 0<=i<=|s| ∧L result = (∑ j=0, i-1)(s[j])
+      ¬B ≡ i >= |s|
+
+      I ∧ ¬B ≡ i=|s| ∧L result = (∑ j=0, i-1)(s[j])
+
+      si i+|s| entoces result = (∑ j=0, |s|-1)(s[j])
+      la implicacion es trivial, ya que los terminos son iguales.
+
+  b) Que punto falla en la demostracion si el primer termino de I se reemplaza por 0<=i<s ?
+    Falla el punto 3. porque I y ¬B darian false. (0<=i<|s| ∧ i>=|s| ≡ false)
+  
+  c) Que punto de la demostracion falla si el limite superior de la sumatoria (i-1) se reemplaza por i?
+    Falla el punto 2, en la parte donde se pasa el s[i] restando, ya no se podria aplicar la regla de
+      la sumatoria, porque quedaria (∑ j=0, i+1)(s[j]) - s[i] ≡ (∑ j=0, i-1)(s[j]) - s[i+1].
+    Luego no podriamos probar que I ∧ B ⟹ Q.
+  
+  e) Proponer una funcion variante y demostrar formalmente la terminacion del ciclo, utilizando la 
+       funcion variante.
+  
+    fv ≡ |s| - i
+    
+    4. {I ∧ B ∧ v₀ = fv} S {fv < v₀}  // La funcion variante decrece
+      wp(S1; S2, fv < v₀)
+      // Axioma 3
+      ≡ wp(S1, wp(S2, fv < v₀))
+      // reemplazo S2 y fv
+      ≡ wp(S1, wp(i := i + 1, |s| - i < v₀))
+      // Axioma 1
+      ≡ wp(S1, def(i+1) ∧L |s| - (i+1) < v₀))
+      // def(i+1) = true - reemplazo S1
+      ≡ wp(result := result + s[i], |s| - (i+1) < v₀))
+      // Axioma 1
+      ≡ def(result + s[i]) ∧L |s| - (i+1) < v₀
+      // def(s[i])
+      ≡ 0<=i<|s| ∧L |s| - i - 1 < v₀
+
+      Puedo usar {I ∧ B ∧ v₀ = fv}:
+        1. 0<=i<=|s|
+        2. result = (∑ j=0, i-1)(s[j])
+        3. i < |s|
+        4. v₀ = |s| - i
+          // resto uno en ambos terminos para obtener algo similar a lo que quiero probar
+          v₀ - 1  = |s| - i - 1
+          // v₀ - 1 es menor estricto que v₀
+          v₀ - 1 < v₀  ⟹ |s| - i - 1 < v₀
+
+      Quiero probar wp(S1; S2, fv<v₀):
+        1. 0<=i<|s| Vale por 0<=i<=|s| y i < |s|
+        2. |s| - i - 1 < v₀ Vale por v₀ = |s| - i
+
+    5. I ∧ fv ≤ 0 ⟹ ¬B
+      Utilizando { I ∧ fv<=0 }:
+        I ≡ 0<=i<=|s| ∧L result = (∑ j=0, i-1)(s[j])
+        fv <= 0 ≡ |s| - i <= 0 ≡ |s| <= i
+      Quiero demostrar ¬B:
+        ¬B ≡ i >= |s| Vale, por fv<=0
+
+      
+
+
+
 Ejercicio 7.
 Resuelto en clase con Tomas.
 
@@ -98,3 +231,45 @@ termina el ciclo.
 
 7.c) Proponer una funcion variante que permita demostrar que el ciclo termina.
 
+---- Desde aca copie y pegue la solucion porque me tuve que ir ---
+Encontrar fv:
+	¬B ≡ ¬(i < |s|) ≡ i >= |s|
+
+	quiero fv <= 0  =>  i >= |s|
+	Si consigo fv <= 0  ≡  i >= |s|
+	
+	i >= |s| ≡
+	|s| <= i ≡
+	|s|-i <= 0
+	
+	--> fv = |s|-i	
+
+	
+4. {I ∧ B ∧ fv = v_0 } cuerpoCiclo {fv < v_0 }
+	
+	wp(cuerpoCiclo, |s|-i < v_0) ≡
+	wp((r[i] := s[i]; i := i+1), |s|-i < v_0) ≡ (Ax3)
+	wp(r[i] := s[i], wp(i := i+1, |s|-i < v_0)) ≡
+	wp(r[i] := s[i], def(i+1) ^L reemp(i,i+1,|s|-i < v_0)) ≡
+	wp(r[i] := s[i], |s|-(i+1) < v_0) ≡ (Ax3)
+	wp(r[i] := s[i], |s|-(i+1) < v_0) ≡
+	wp(r := setAt(r,i,s[i]), |s|-(i+1) < v_0) ≡ 
+	def(setAt(r,i,s[i])) ^L |s|-(i+1) < v_0 ≡
+	0 <= i < |s| ^L 0 <= i < |r| ^L |s|-(i+1) < v_0 ≡
+	
+	qvq I ∧ B ∧ fv = v_0 implica lo de arriba
+	
+	Sabemos:
+		I ≡ (0 <= i <= |s| ^ |s| = |r|) ^L (∀j :Z)(0 ≤ j < i →L s[j] = r[j])	
+		B ≡ i < |s|
+		|s|-i = v_0
+	Entonces:
+		0 <= i < |s| vale por i < |s| en B y 0 <= i <= |s| en I
+		0 <= i < |r| vale por |s| = |r| y lo anterior
+		|s|-(i+1) < v_0 ≡ |s|-i -1 < v_0 ≡ v_0 - 1 < v_0 ≡ True
+
+5. I ∧ fv ≤ 0 => ¬B
+	
+	fv <= 0 ≡ |s|-i <= 0 ≡ |s| <= i ≡ i >= |s| ≡ ¬B  listo!
+
+---- Hasta aca copie y pegue la solucion porque me tuve que ir ---
