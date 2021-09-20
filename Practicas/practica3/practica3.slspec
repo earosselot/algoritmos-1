@@ -1,0 +1,146 @@
+Ejercicio 17
+
+Dados dos enteros a y b, se necesita calcular su suma, y retoernarla en un entero c. Cuales 
+de las siguentes especificaciones son correctas para este problema y porque?
+
+a) es correcta, aunque a y b podrian ser solo in.
+b) es incorreca ya que c es in, deberia ser out o inout.
+c) correcta
+d) correcta, pero no es necesario que a y b sean inout.
+
+Ejercicio 18
+
+Dada una secuencia l, se desea sacar su primer elemento y devolverlo. 
+Decidir cuales de estas especificacionesson correctas. 
+Para las que no lo son, indicar por que y justificar con ejemplos.
+
+a) Incorrecta. head(l) es equivalente a l[0], devuelve el primer elemento pero no lo saca de la lista
+b) Incorrecta. misma justificacion que a.
+c) Incorrecta. Se esta sacando un elemento de la lista, pero podria ser cualquiera.
+d) Correcta.
+e) Correcta.
+
+Ejercicio 19
+
+a) intercambia los elementos de las pocisiones i y j de una secuencia.
+b) intercambiar(⟨1,2,3,4,5⟩, 0, 4) -> l = ⟨5,32,34,34,1⟩
+c) 
+  Post ∧ (∀k: ℤ)(0<=k<|l| ∧ k≠i ∧ k≠j ⟹L l[k] = L₀[k])
+
+Ejercicio 20
+
+Post {
+  /* Las longuitud se mantiente igual */
+  |l| = |L₀| ∧L  
+  /* En la posicion I0 de entrada de la lista l va a estar el primer 
+  elemento de la lista de entrada */
+  l[I₀] = L₀[0] ∧
+  /* el valor de retorno de i es el valor que habia en la lista en la
+  posicion I0 */
+  i = L₀[I₀] ∧
+  /* todos los elementos de l que no son la posicion I0 van a ser igaules al 
+  elemento que habia en la lista en la posicion I0 */
+  (∀j: ℤ)((0≤j<|l| ∧ j≠I₀) ⟹L l[j] = L₀[I₀])
+}
+
+Pone el primer elemento en la posicion i, agarra el elemento de la posicion i
+y lo pone en todos los demas lugares de la secuencia y devuelve ese valor en i.
+
+ejemplo:
+L₀ = ⟨1, 2, 3, 4, 5⟩, I₀ = 2
+l[2] = L₀[0] = 1
+l = ⟨ 1, 2, 1, 4, 5 ⟩
+i = L₀[I₀] = L₀[2] = 3
+l = ⟨3, 3, 1, 3, 3⟩
+
+Ejercicio 21
+
+Dada una secuencia de enteros, se requiere multiplicar por 2 aquellos valores
+que se encuentran en posiciones pares. Indicar por que son incorrectas las 
+siguientes especificaciones, y proponer una alternativa correcta.
+
+a) No se especifica que pasa con los elementos de posiciones impares
+b) No se especifica que el |l| se mantiene, se podria devolver una subsecuencia
+    de la respuesta e igualmente cumpliria con la especificacion.
+c) l no esta fijada desde el principio, podria devolver una l que sea totalmente
+    distinta a la de entrada y que igualmente cumpla todo.
+
+proc duplicarPares(inout l: seq ⟨ℤ⟩) {
+  pre {l = L₀}
+  post { 
+    |l| = |L₀| ∧ 
+    (∀j: ℤ)(0≤j<|l| ∧ j mod 2 = 0 ⟹L l[j] = 2 * L₀[j]) ∧
+    (∀j: ℤ)(0≤j<|l| ∧ j mod 2 ≠ 0 ⟹L l[j] = L₀[j])
+  }
+};
+
+Ejercicio 22
+
+a) 
+que dada una secuencia de enteros mayores a dos, reemplaza dichos valores por 
+el numero primo menor mas cercano. 
+Por ejemplo, si l=〈6,5,9,14〉, luego de aplicarprimosHermanos(l), l=〈5,3,7,13〉
+
+proc primosHermanos(inout l: seq⟨ℤ⟩) {
+  pre {l = L₀}
+  post {
+    |l| = |L₀| ∧
+    (∀i: ℤ)(0≤i<|l| ⟹L l[i] = x ∧ esPrimoMenor(x, L₀[i]))
+  }
+};
+
+pred esPrimoMenor(x, y: ℤ) {
+  esPrimo(x) ∧
+  (∀k: ℤ)(x<k<y ⟹L !esPrimo(k))
+};
+
+pred esPrimo(x: ℤ) {
+  (∀n: ℤ)(2≤n<x ⟹L x mod n ≠ 0)
+}
+
+b) 
+que reemplaza todas las apariciones de a en l por b.
+
+proc reemplazar(inout l: seq⟨Char⟩, in a, b: Char) {
+  pre {l = L₀}
+  post {
+    |l| = |L₀| ∧
+    (∀i: ℤ)(0≤i<|l| ∧ L₀[i] = a ⟹L l[i] = b)
+  }
+};
+
+
+e) 
+que  elimina  los  elementos  duplicados  de l dejando solo su primera 
+aparicion (en el orden original). Devuelve ademas, dup una secuencia con todas
+las apariciones eliminadas (en cualquier orden).
+
+
+proc limpiarDuplicados(inout l : seq⟨Char⟩, out dup: seq⟨Char⟩) {
+  pre {l = L₀}
+  post {
+    /* el largo de l y dup es igual al largo de L₀ */
+    |l| + |dup| = |L₀| ∧
+    /* l no tiene duplicados */
+    (∀x, y: Char)(x∈l ∧ y∈l ⟹L x ≠ y) ∧
+    /* l tiene el orden original */
+    (∀i, j: ℤ)(
+      (
+        0≤i<|l| ∧ 
+        0≤j<|L₀| ∧L 
+        esPrimeraAparicion(i, l[i], l) ∧ 
+        esPrimeraAparicion(j, L₀[j], L₀)
+      ) 
+      ⟹L i ≤ j )
+    /* dup tiene los elementos duplicados de l */
+    (∀x: Char)(x∈l ∧ x∈dup ⟹L 
+      cantApariciones(x, dup) = cantApariciones(x, L₀) - 1 
+    )
+  }
+};
+
+pred esPrimeraAparicion(i: ℤ, x: ℤ, l: seq⟨T⟩) {
+  (∀j: ℤ)(0≤j<|l| ∧ l[j]=x ⟹L i≤j)
+};
+
+
