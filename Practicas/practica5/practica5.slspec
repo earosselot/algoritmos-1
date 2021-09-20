@@ -273,3 +273,19 @@ Encontrar fv:
 	fv <= 0 ≡ |s|-i <= 0 ≡ |s| <= i ≡ i >= |s| ≡ ¬B  listo!
 
 ---- Hasta aca copie y pegue la solucion porque me tuve que ir ---
+
+
+Ejercicio 9
+
+while (i >= length(s) / 2) do
+  // suma va sumando desde el primer elemento
+  suma := suma + s[length(s)-1-i];
+  // i arranca desde el ultimo elemento y corta despues de pasar la mitad.
+  i := i-1;
+endwhile
+
+Pc ≡ {|s| mod 2 = 0 ∧ i = |s| - 1 ∧ suma = 0 }
+Qc ≡ {|s| mod 2 = 0 ∧ i = |s| / 2 - 1 ∧L suma = (⅀ j=0, (|s|/2)-1)(s[j])}
+
+a) Especificar un invariante de ciclo que permita demostrar que el ciclo cumple la 
+postcondicion.

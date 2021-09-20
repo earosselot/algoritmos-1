@@ -114,10 +114,60 @@ bool estaOrdenado(vector<int> v) {
 //Ejercicio
 vector<int> factoresPrimos(int n){
 	//que dado un entero devuelve un vector con los factores primos del mismo
+
+  vector<int> factoresPrimos;
+  int i = 2;
+
+  while (n > 1)
+  {
+    if (esPrimo(i) && n % i == 0)
+    {
+      n = n / i;
+      factoresPrimos.push_back(i);
+    }
+    else
+    {
+      i = i + 1;
+    }
+  }
+  return factoresPrimos;
+}
+
+/* 
+15%2 = 0 ? no
+15%3 = 0 ? si 15/3=5
+5%3 = 0 ? no
+4 es primo ? no
+5%5 = 0 ? si 5/5=1 
+*/
+
+bool esPrimo(int n)
+{
+  int i = 2;
+  bool esPrimo = true;
+  while (esPrimo && i < n)
+  {
+    if (n % i == 0)
+    {
+      esPrimo = false;
+    }
+    i = i + 1;
+  }
+  return esPrimo;
 }
 
 //Ejercicio
 void mostrarVector(vector<int> v){
-	//que dado un vector de enteros muestra por la salida estándar, el vector
+  cout << "[";
+  for (int i = 0; i < v.size(); i++)
+  {
+    cout << v[i];
+    if (i != v.size() - 1)
+    {
+      cout << ", ";
+    }
+  }
+  cout << "]" << endl;
+  //que dado un vector de enteros muestra por la salida estándar, el vector
 	// Ejemplo: si el vector es <1, 2, 5, 65> se debe mostrar en pantalla [1, 2, 5, 65]
 }
