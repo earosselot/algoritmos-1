@@ -1,0 +1,71 @@
+// Dada una encuesta valida, 
+// ordenar la encuesta de hogares th de acuerdo a:
+//   1) El codigo de region: siguendo el orden dado por el numero de categoria (Buenos Aires -> Noa -> erc..)
+//   2) Dentro de cada region, ordenar de forma creciente por CODUSU.
+// ordenar la encuesta de individuos ti segun:
+//   1) El CODUSU de th luego de realizar el ordenamiento.
+//   2) Dentro del mismo hogar, ordenar por COMPONENTE de menor a mayor.
+
+proc ordenarRegionYTipo(inout th: ephₕ, inout ti: ephᵢ) {
+  pre { cumpleRequisitos(th, ti) ∧ /*Luego?*/ th = TH₀ ∧ ti = TI₀ }
+  post {
+    hogaresOrdenadosPorRegion(th) ∧ 
+    hogaresOrdenadosPorCodusuEnRegion(th) ∧ /*Luego? 
+    Para que las de individuos usen la encuesta de hogares ordenada...*/
+    individuosOrdenadosPorHogcodusu(th, ti) ∧
+    individuosOrdenadosPorComponenteEnHogar(th, ti)
+  }
+};
+
+pred hogaresOrdenadosPorRegion (th: ephₕ) {
+  (∀ i,j: ℤ)(
+    (enRango(i, th) ∧ 
+    enRango(j, th) ∧ i<j) ⟹L 
+      th[i][@region] <= th[j][@region]
+  )
+}
+
+pred hogaresOrdenadosPorCodusuEnRegion (th: ephₕ) {
+  (∀ i,j: ℤ)(
+    (enRango(i, th) ∧
+    enRango(j, th) ∧ 
+    i<j ∧ 
+    th[i][@region] = th[j][@region]) ⟹L 
+      th[i][@hogcodusu] < th[j][@hogcodusu]
+  )
+}
+
+pred individuosOrdenadosPorHogcodusu (th: ephₕ, ti: ephᵢ) {
+  /* Este pred no contempla el caso de dos personas que viven en el mismo hogar
+  por eso va k<h y no k<=h */
+  (∀i, j, k, h: ℤ)(
+    enRango(i, ti) ∧ 
+    enRango(j, ti) ∧ 
+    enRango(k, th) ∧
+    enRango(h, th) ∧
+    /* Dos individuos que viven en distintos hogares */
+    viveEnHogar(ti[i], th[k]) ∧
+    viveEnHogar(ti[j], th[h]) ∧
+    k < h 
+    ⟹L 
+      i < j
+  )
+}
+
+pred individuosOrdenadosPorComponenteEnHogar(th: ephₕ, ti: ephᵢ) {
+  (∀i, j, k: ℤ)(
+    enRango(i, ti) ∧ 
+    enRango(j, ti) ∧ 
+    enRango(k, th) ∧
+    /* Dos individuos que viven en el mismo hogar */
+    viveEnHogar(ti[i], th[k]) ∧
+    viveEnHogar(ti[j], th[k]) ∧
+    ti[i][@componente] < ti[j][@componente]
+    ⟹L 
+      i < j
+  )
+}
+
+pred viveEnHogar(x: individuo, h: hogar) {
+  x[@indcodusu] = h[@hogcodusu]
+}
