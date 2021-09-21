@@ -1,3 +1,11 @@
 {
-  "cmake.cmakePath": "/usr/local/bin/cmake"
+  "cmake.cmakePath": "/usr/local/bin/cmake",
+  "files.associations": {
+    "*.tcc": "cpp",
+    "fstream": "cpp",
+    "iostream": "cpp",
+    "ostream": "cpp",
+    "vector": "cpp"
+  },
+  "C_Cpp.errorSquiggles": "Disabled"
 }
