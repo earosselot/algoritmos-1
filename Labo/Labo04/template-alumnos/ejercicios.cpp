@@ -290,15 +290,23 @@ float valorMedio()
 }
 
 // Devolver en res la fraccion (entre 0 y 1) de numeros mayores a 0.
-void fraccion(vector<int> v, float res)
+void fraccion(vector<int> v, float &res)
 {
-  int count = 0;
-  for (int i = 0; i < v.size(); i++)
+  int longitud = v.size();
+  if (longitud == 0)
   {
-    if (v[i] > 0)
-    {
-      count++;
-    }
+    res = 0;
   }
-  res = count / v.size();
+  else
+  {
+    int count = 0;
+    for (int i = 0; i < v.size(); i++)
+    {
+      if (v[i] > 0)
+      {
+        count++;
+      }
+    }
+    res = count / (float)v.size();
+  }
 }
