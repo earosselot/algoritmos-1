@@ -4,6 +4,8 @@ Ejercicio 21-c
 
 c++
   que es std:: ??
+  hay un elseif? (en el ejercicio esPrimo del labo 4 esta puesto, pero no se si anda.)
+  se pueden omitir los corchetes para los whiles, ifs, etc...
 
 Labo3
 cantApariciones
@@ -14,10 +16,15 @@ cantidadAparicionesPalabra
 promedio
   Esta bien hacer el paso de int a float asi??
 
+Labo4
+ejercicio10 fraccion
+  - no entiendo que tiene que hacer la funcion.
+
 TP
   en el ejercicio 7:
     - para usar las encuestas de inout hay que poner un yLuego ??
     - en los de ordenar el i<j va a la derecha del implicaLuego o es lo mismo ??
 
 Teorica
-  en el single responsability principle: debo tener un archivo que haga de union de las distintas responsabilidades? 
+  en el single responsability principle: debo tener un archivo que haga de union 
+    de las distintas responsabilidades? 

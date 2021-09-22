@@ -160,13 +160,13 @@ bool test07_sumaDoble(){
     int testNumber = 7;
     string testName = "sumaDoble";
     printBeginTest(testNumber, testName);
-    
+
     vector<int> impares = {1,3,5,7,9,11,23,33,99,101};
     vector<int> pares= {2,4,6,8,10,50,990};
     vector<int> mezcla = {-1, 0, 500, 22, -2, 35, 16, -10, 12, 66, 76, -2};
     vector<int> vacio= {};
     vector<int> paresNeg = {-2,1,1,1,-2,2,1,-2,-2,1};
-    
+
     bool res = asegurar(sumaDoble(impares), 0);
     res &= asegurar(sumaDoble(pares), 2140);
     res &= asegurar(sumaDoble(mezcla), 1384);
@@ -220,7 +220,7 @@ bool test10_fraccion(){
     float calc;
     bool res = true;
     fraccion(variado,calc);
-    res &= esAproximado(calc, 0.7);    
+    res &= esAproximado(calc, 0.7);
     fraccion(todosPos,calc);
     res &= esAproximado(calc, 1);
     fraccion(todosNeg,calc);
