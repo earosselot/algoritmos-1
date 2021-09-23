@@ -289,3 +289,107 @@ Qc ≡ {|s| mod 2 = 0 ∧ i = |s| / 2 - 1 ∧L suma = (⅀ j=0, (|s|/2)-1)(s[j])
 
 a) Especificar un invariante de ciclo que permita demostrar que el ciclo cumple la 
 postcondicion.
+
+
+
+Ejercicio 10
+
+proc reemplazarTodos(inout:seq〈ℤ〉,in a: ℤ,in b: ℤ){
+  Pre{s=S0}
+  Post{|s|=|S0| ∧L
+    (∀j:Z)((0≤j<|s| ∧L S₀[j] = a) ⟹L s[j] = b ) ∧ 
+    (∀j:Z)((0≤j<|s| ∧L S₀[j] ≠ a) ⟹L s[j] = S₀[j] )}
+}
+
+a)
+i := 0;
+while i < s.size() do
+  if s[i] == a      // Sif  B = s[i] == a
+    s[i] = b;       // S1
+  else 
+    skip            // S2
+  endif 
+  i := i + 1;       // S3
+endwhile;
+
+b)
+Pc ≡ i=0 ∧ s=S₀
+Qc ≡ |s|=|S0| ∧L
+        (∀j:Z)((0≤j<|s| ∧L S₀[j] = a) ⟹L s[j] = b ) ∧ 
+        (∀j:Z)((0≤j<|s| ∧L S₀[j] ≠ a) ⟹L s[j] = S₀[j])
+
+c)
+I ≡ 0≤i≤|s| ∧ |s|=|S0| ∧L
+        (∀j:Z)((0≤j<i ∧L S₀[j] = a) ⟹L s[j] = b ) ∧ 
+        (∀j:Z)((0≤j<i ∧L S₀[j] ≠ a) ⟹L s[j] = S₀[j])
+
+1. Pc ⟹ I
+2. {I ∧ B} S {I}
+3. I ∧ ¬B ⟹ Qc
+4. {I ∧ B ∧ v₀ = fv} S {fv < v₀}
+5. I ∧ fv ≤ 0 ⟹ ¬B
+6. {Pc} while B do S endwhile {Qc}
+
+1. Pc ⟹ I
+
+  quiero probar el invariante:
+    0≤i≤|s| es valido porque i=0
+    |s|=|S0| es valido por s=S₀
+    (∀j:Z)((0≤j<i ∧L S₀[j] = a) ⟹L s[j] = b ) como i=0
+      ≡ (∀j:Z)((0≤j<0 ∧L S₀[j] = a) ⟹L s[j] = b ) ≡ true
+    (∀j:Z)((0≤j<i ∧L S₀[j] ≠ a) ⟹L s[j] = S₀[j]) como i=0
+      (∀j:Z)((0≤j<0 ∧L S₀[j] ≠ a) ⟹L s[j] = S₀[j]) ≡ true
+
+  se cumple que Pc implica al I
+
+2. {I ∧ B} S {I}
+
+  wp(S, I) 
+  ≡  wp(Sif;S3, I)) 
+  // Axioma 3 
+  ≡ wp(Sif, wp (S3, I)) 
+  // Axioma 4
+  ≡ def(B) ∧L ((B ∧ wp(S1, wp(S3, I))) ∨ (¬B ∧ wp(S2, wp(S3, I)))
+
+  calculo wp(S3, I)
+  ≡ wp(i := i + 1, 0≤i≤|s| ∧ |s|=|S0| ∧L
+      (∀j:Z)((0≤j<i ∧L S₀[j] = a) ⟹L s[j] = b ) ∧ 
+      (∀j:Z)((0≤j<i ∧L S₀[j] ≠ a) ⟹L s[j] = S₀[j]))
+  // Axioma 1
+  ≡ def(i+1) ∧L 0≤i+1≤|s| ∧ |s|=|S0| ∧L
+      (∀j:Z)((0≤j<i+1 ∧L S₀[j] = a) ⟹L s[j] = b ) ∧ 
+      (∀j:Z)((0≤j<i+1 ∧L S₀[j] ≠ a) ⟹L s[j] = S₀[j])
+  // def = true
+  ≡ 0≤i+1≤|s| ∧ |s|=|S0| ∧L
+      (∀j:Z)((0≤j<i+1 ∧L S₀[j] = a) ⟹L s[j] = b ) ∧ 
+      (∀j:Z)((0≤j<i+1 ∧L S₀[j] ≠ a) ⟹L s[j] = S₀[j])
+
+  calculo wp(S1, wp(S3, I))
+  ≡ wp(s[i] = b, 0≤i+1≤|s| ∧ |s|=|S0| ∧L
+      (∀j:Z)((0≤j<i+1 ∧L S₀[j] = a) ⟹L s[j] = b ) ∧ 
+      (∀j:Z)((0≤j<i+1 ∧L S₀[j] ≠ a) ⟹L s[j] = S₀[j]))
+  // convierto a setAt
+  ≡ wp(s := setAt(s, i, b), 0≤i+1≤|s| ∧ |s|=|S0| ∧L
+    (∀j:Z)((0≤j<i+1 ∧L S₀[j] = a) ⟹L s[j] = b ) ∧ 
+    (∀j:Z)((0≤j<i+1 ∧L S₀[j] ≠ a) ⟹L s[j] = S₀[j]))  
+  // Axioma 1
+  ≡ def(setAt(s, i, b)) ∧L 0≤i+1≤|setAt(s, i, b)| ∧ |setAt(s, i, b)|=|S0| ∧L
+    (∀j:Z)((0≤j<i+1 ∧L S₀[j] = a) ⟹L setAt(s, i, b)[j] = b ) ∧ 
+    (∀j:Z)((0≤j<i+1 ∧L S₀[j] ≠ a) ⟹L setAt(s, i, b)[j] = S₀[j])
+  // def y |setAt(s, i, b)|=|s|
+  ≡ 0≤i<|s| ∧L 0≤i+1≤|s| ∧ |s|=|S0| ∧L
+    (∀j:Z)((0≤j<i+1 ∧L S₀[j] = a) ⟹L setAt(s, i, b)[j] = b ) ∧ 
+    (∀j:Z)((0≤j<i+1 ∧L S₀[j] ≠ a) ⟹L setAt(s, i, b)[j] = S₀[j])
+  // separo caso i=j
+  ≡ 0≤i<|s| ∧L 0≤i+1≤|s| ∧ |s|=|S0| ∧L
+    (∀j:Z)((0≤j<i+1 ∧L S₀[j] = a) ⟹L setAt(s, i, b)[j] = b ) ∧ (S₀[i] = a ⟹L setAt(s, i, b)[i] = b)
+    (∀j:Z)((0≤j<i+1 ∧L S₀[j] ≠ a) ⟹L setAt(s, i, b)[j] = S₀[j]) ∧ (S₀[i] ≠ a ⟹L setAt(s, i, b)[i] = S₀[i])
+  // simplifico setAt
+  ≡ 0≤i<|s| ∧L 0≤i+1≤|s| ∧ |s|=|S0| ∧L
+    (∀j:Z)((0≤j<i+1 ∧L S₀[j] = a) ⟹L s[j] = b ) ∧ (S₀[i] = a ⟹L b = b)
+    (∀j:Z)((0≤j<i+1 ∧L S₀[j] ≠ a) ⟹L s[j] = S₀[j]) ∧ (S₀[i] ≠ a ⟹L b[i] = S₀[i])
+
+
+3. I ∧ ¬B ⟹ Qc
+
+

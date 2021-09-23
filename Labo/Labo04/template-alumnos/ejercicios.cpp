@@ -300,13 +300,15 @@ void fraccion(vector<int> v, float &res)
   else
   {
     int count = 0;
-    for (int i = 0; i < v.size(); i++)
+    for (int i = 0; i < longitud; i++)
     {
       if (v[i] > 0)
       {
         count++;
       }
     }
-    res = count / (float)v.size();
+    res = (float)count / (float)v.size();
   }
 }
+
+// v.size() devuelve un unsigned int -> solo positivos

@@ -63,7 +63,8 @@ a) No se especifica que pasa con los elementos de posiciones impares
 b) No se especifica que el |l| se mantiene, se podria devolver una subsecuencia
     de la respuesta e igualmente cumpliria con la especificacion.
 c) l no esta fijada desde el principio, podria devolver una l que sea totalmente
-    distinta a la de entrada y que igualmente cumpla todo.
+    distinta a la de entrada y que igualmente cumpla con todo lo que pide la post.
+    ej.: duplicarPares(l=⟨4,5,6⟩, res) -> l=⟨10, 11, 12⟩ ∧ res=⟨20, 11, 24⟩
 
 proc duplicarPares(inout l: seq ⟨ℤ⟩) {
   pre {l = L₀}

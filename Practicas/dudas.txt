@@ -1,30 +1,17 @@
-Guia3 
-Ejercicio 21-c
-  Esta bien justificado? 
-
-c++
-  que es std:: ??
-  hay un elseif? (en el ejercicio esPrimo del labo 4 esta puesto, pero no se si anda.)
-  se pueden omitir los corchetes para los whiles, ifs, etc...
-
 Labo3
 cantApariciones
   - Se pueden eliminar elementos de vectores por indice? v.pop_back(i)
   - Hay objetos\diccionarios en c++ ?
-cantidadAparicionesPalabra
-  Arme una funcion nueva para leerArchivoTexto y mostrarVectorStrings, se puede hacer de otra manera?
-promedio
-  Esta bien hacer el paso de int a float asi??
-
-Labo4
-ejercicio10 fraccion
-  - no entiendo que tiene que hacer la funcion.
 
 TP
   en el ejercicio 7:
     - para usar las encuestas de inout hay que poner un yLuego ??
+    siempre se considera th como el th de salida
     - en los de ordenar el i<j va a la derecha del implicaLuego o es lo mismo ??
+    lo marque en el ejercicio como va. despues mirarlo.
+    - en el 11 preguntar por el vector de opciones.
+    - en la busqueda criterios para filtrar. acomodar bien.
 
 Teorica
-  en el single responsability principle: debo tener un archivo que haga de union 
-    de las distintas responsabilidades? 
+  en el single responsability principle: debo tener un archivo que haga de union
+    de las distintas responsabilidades?

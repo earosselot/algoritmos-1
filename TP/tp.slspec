@@ -7,16 +7,16 @@
 //   2) Dentro del mismo hogar, ordenar por COMPONENTE de menor a mayor.
 
 proc ordenarRegionYTipo(inout th: ephₕ, inout ti: ephᵢ) {
-  pre { cumpleRequisitos(th, ti) ∧ /*Luego?*/ th = TH₀ ∧ ti = TI₀ }
+  pre { cumpleRequisitos(th, ti) }
   post {
     hogaresOrdenadosPorRegion(th) ∧ 
-    hogaresOrdenadosPorCodusuEnRegion(th) ∧ /*Luego? 
-    Para que las de individuos usen la encuesta de hogares ordenada...*/
+    hogaresOrdenadosPorCodusuEnRegion(th) ∧
     individuosOrdenadosPorHogcodusu(th, ti) ∧
     individuosOrdenadosPorComponenteEnHogar(th, ti)
   }
 };
 
+// este es el que anda
 pred hogaresOrdenadosPorRegion (th: ephₕ) {
   (∀ i,j: ℤ)(
     (enRango(i, th) ∧ 
@@ -24,6 +24,19 @@ pred hogaresOrdenadosPorRegion (th: ephₕ) {
       th[i][@region] <= th[j][@region]
   )
 }
+
+
+pred hogaresOrdenadosPorRegion (th: ephₕ) {
+  (∀ i,j: ℤ)(
+    (enRango(i, th) ∧ 
+    enRango(j, th) ∧  
+    th[i][@region] > th[j][@region]) ⟹L 
+      i>j
+  )
+}
+
+
+
 
 pred hogaresOrdenadosPorCodusuEnRegion (th: ephₕ) {
   (∀ i,j: ℤ)(
@@ -57,12 +70,11 @@ pred individuosOrdenadosPorComponenteEnHogar(th: ephₕ, ti: ephᵢ) {
     enRango(i, ti) ∧ 
     enRango(j, ti) ∧ 
     enRango(k, th) ∧
-    /* Dos individuos que viven en el mismo hogar */
     viveEnHogar(ti[i], th[k]) ∧
     viveEnHogar(ti[j], th[k]) ∧
-    ti[i][@componente] < ti[j][@componente]
+    i < j
     ⟹L 
-      i < j
+       ti[i][@componente] < ti[j][@componente]
   )
 }
 
