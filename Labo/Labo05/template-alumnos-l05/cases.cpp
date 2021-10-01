@@ -17,7 +17,7 @@ bool asegurar(bool estimated, bool expected) {
 }
 
 bool test01_existePico(){
-    int testNumber = 2;
+    int testNumber = 1;
     string testName = "existePico";
     
     printBeginTest(testNumber, testName);
@@ -37,7 +37,7 @@ bool test01_existePico(){
 }
 
 bool test02_mcd(){
-    int testNumber = 3;
+    int testNumber = 2;
     string testName = "mcd";
     
     printBeginTest(testNumber, testName);
@@ -53,7 +53,7 @@ bool test02_mcd(){
 }
 
 bool test03_indiceMinSubsec(){
-    int testNumber = 4;
+    int testNumber = 3;
     string testName = "indiceMinSubsec";
     
     printBeginTest(testNumber, testName);
@@ -78,7 +78,7 @@ bool test03_indiceMinSubsec(){
 }
 
 bool test04_ordenar1(){
-    int testNumber = 6;
+    int testNumber = 4;
     string testName = "ordenar1";
     
     printBeginTest(testNumber, testName);
@@ -110,7 +110,7 @@ bool test04_ordenar1(){
 }
 
 bool test05_ordenar2(){
-    int testNumber = 7;
+    int testNumber = 5;
     string testName = "ordenar2";
     
     printBeginTest(testNumber, testName);
@@ -155,7 +155,7 @@ bool test05_ordenar2(){
 }
 
 bool test06_division(){
-    int testNumber = 1;
+    int testNumber = 6;
     string testName = "division";
     
     printBeginTest(testNumber, testName);
