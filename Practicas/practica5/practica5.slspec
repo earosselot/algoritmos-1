@@ -127,11 +127,197 @@ e) Demostrar formalmente la correccion parcial del ciclo, usando los primeros pu
       Quiero demostrar ¬B:
         ¬B ≡ i >= |s| Vale, por fv<=0
 
-      
+
+//-----------------------------------------------------------------//
+//-----------------------------------------------------------------//
+//-----------------------------------------------------------------//
+
+Ejercicio 2.
+
+proc sumarParesHastaN((in n : ℤ, out result: ℤ) {
+  pre {n ≥ 0}
+  post {result = (∑ j=0 n-1)(if j mod 2 = 0 then j else 0 fi)}
+};
+
+//Implementacion
+result := 0;
+i := 0;
+while (i < n) do
+  result := result + i;
+  i := i + 2;
+endwhile;
+
+// Invariante
+
+I ≡ 0 ≤ i ≤ n+1 ∧ i mod 2 = 0 ∧ result = (∑ j=0 i-1)(if j mod 2 = 0 then j else 0 fi)
+
+// Calcular pre y postcondicion del ciclo.
+
+Pc ≡ n ≥ 0 ∧ result = 0 ∧ i = 0
+Qc ≡ result = (∑ j=0 n-1)(if j mod 2 = 0 then j else 0 fi)
+B ≡ i < n
+
+// Demostrar correcion - teorema del invariante
+
+1. Pc ⟹ I
+  quiero probar: 
+    1. 0 ≤ i ≤ n+1 ≡ 0 ≤ i ∧ i ≤ n+1  ≡(reemplazo i) 0 ≤ 0 ∧ 0 ≤ n+1. Los dos terminos son triviales por Pc
+    2. i mod 2 = 0. Es true porque i=0 ∧ 0 mod 2 = 0
+    3. result = (∑ j=0 i-1)(if j mod 2 = 0 then j else 0 fi). El resuldado de la sumatoria es 0 y result=0. es true.
+
+2. {I ∧ B} S {I}
+  (I ∧ B) ⟹ wp(S, I)
+
+  wp(result := result + i; i := i + 2, 
+    0 ≤ i ≤ n+1 ∧ i mod 2 = 0 ∧ result = (∑ j=0 i-1)(if j mod 2 = 0 then j else 0 fi))
+
+  ≡ wp(S1; S2, I)
+  // axioma4
+  ≡ wp(S1, wp(S2, I))
+  
+  calculo wp(S2, I) ≡ E1
+  ≡ wp(i := i + 2, 0 ≤ i ≤ n+1 ∧ i mod 2 = 0 ∧ result = (∑ j=0 i-1)(if j mod 2 = 0 then j else 0 fi))
+  // Axioma 1
+  def(i+2) ∧L 0≤i+2≤n+1 ∧ i+2 mod 2 = 0 ∧ result = (∑ j=0 i+1)(if j mod 2 = 0 then j else 0 fi)
+  // def(i+2) = true // i+2 mod 2 = 0 eq. i mod 2 = 0
+  ≡ 0≤i+2≤n+1 ∧ i mod 2 = 0 ∧ result = (∑ j=0 i+1)(if j mod 2 = 0 then j else 0 fi)
+
+  calculo wp(S1, wp(S2, I)) ≡ wp(S1, E1)
+  ≡ wp(result := result + i, E1) 
+  // Axioma1
+  ≡ def(result+i) ∧L 0≤i+2≤n+1 ∧ i mod 2 = 0 ∧ result + i = (∑ j=0 i+1)(if j mod 2 = 0 then j else 0 fi)
+  // def(result+i) = true
+  ≡ 0≤i+2≤n+1 ∧ i mod 2 = 0 ∧ result + i = (∑ j=0 i+1)(if j mod 2 = 0 then j else 0 fi)
+
+  tengo I ∧ B:
+    1. 0 ≤ i ≤ n+1 
+    2. i mod 2 = 0 
+    3. result = (∑ j=0 i-1)(if j mod 2 = 0 then j else 0 fi)
+    4. i < n
+  quiero probar wp(S2, I):
+    1. 0≤i+2 // es trivial por (1) 0 ≤ i 
+    2. i+2≤n+1 ≡ i ≤ n-1 ≡ i < n // es trivial por (4) i < n
+    3. i mod 2 = 0 // es trivial por (2)
+    4. result + i = (∑ j=0 i+1)(if j mod 2 = 0 then j else 0 fi)
+      ≡ result = (∑ j=0 i+1)(if j mod 2 = 0 then j else 0 fi) - i
+      ≡ result = (∑ j=0 i)(if j mod 2 = 0 then j else 0 fi) + (if i+1 mod 2 = 0 then i else 0 fi) - i
+      // i+1 mod 2 = 0 es falso por (2) i mod 2 = 0 
+      ≡ result = (∑ j=0 i)(if j mod 2 = 0 then j else 0 fi) + 0 - i
+      ≡ result = (∑ j=0 i-1)(if j mod 2 = 0 then j else 0 fi) + (if i mod 2 = 0 then i else 0 fi) - i
+      // i mod 2 = 0 es true por (2) i mod 2 = 0
+      ≡ result = (∑ j=0 i-1)(if j mod 2 = 0 then j else 0 fi) + i - i
+      ≡ result = (∑ j=0 i-1)(if j mod 2 = 0 then j else 0 fi) // se implica trivialmente de (3)
 
 
+3. (I ∧ ¬B) ⟹ Qc
+  quiero probar: 
+    1. result = (∑ j=0 n-1)(if j mod 2 = 0 then j else 0 fi)
+      0 ≤ i ≤ n+1 ∧ i mod 2 = 0 ∧ i ≥ n ∧ result = (∑ j=0 i-1)(if j mod 2 = 0 then j else 0 fi)
+      ≡ (i = n ∨ i = n+1) ∧ i mod 2 = 0 ∧ result = (∑ j=0 i-1)(if j mod 2 = 0 then j else 0 fi)
+      si i=n   ⟹ result = (∑ j=0 n-1)(if j mod 2 = 0 then j else 0 fi) // que era lo que queria probar
+      si i=n+1 ⟹ result = (∑ j=0 n)(if j mod 2 = 0 then j else 0 fi) 
+                  ≡ result = (∑ j=0 n-1)(if j mod 2 = 0 then j else 0 fi) + (if n mod 2 = 0 then j else 0 fi) 
+                  // como i mod 2 = 0 => i+1 mod 2 = 0 es false
+                  ≡ result = (∑ j=0 n-1)(if j mod 2 = 0 then j else 0 fi) + 0
+      en cualquiera de los 2 casos I ∧ ¬B implican a Qc.
 
-Ejercicio 7.
+
+// Falta segunda parte (terminacion del ciclo)
+
+4. {I ∧ B ∧ v₀ = fv} S {fv < v₀}
+5. I ∧ fv ≤ 0 ⟹ ¬B
+
+// propongo una funcion variante
+fv = n - i
+
+4. {I ∧ B ∧ v₀ = fv} S {fv < v₀}
+   // por definicion de tripla de Hoare
+   {I ∧ B ∧ v₀ = fv} ⟹ wp(S, fv < v₀) ??
+
+  calculo wp(S, fv < v₀)
+  wp(S1, wp(S2, fv < v₀))
+
+  calculo E1 ≡ wp(S2, fv < v₀)
+  ≡ wp(i := i + 2, n-(i+2) < v₀)
+  // Axioma1
+  ≡ def(i+2) ∧L n-(i+2) < v₀
+  // asuimos que las variables estan siempre definidas.
+  ≡ n-(i+2) < v₀
+
+  reemplazo E1 y S1:
+  wp(result := result + i, n-(i+2) < v₀)
+  // Axioma 1
+  ≡ def(result+i) ∧L n-(i+2) < v₀ 
+  // asumimos que las variables estan siempre definidas
+  ≡ n-(i+2) < v₀ 
+
+  tengo {I ∧ B ∧ v₀ = fv}:
+    1. 0 ≤ i ≤ n+1 
+    2. i mod 2 = 0 
+    3. result = (∑ j=0 i-1)(if j mod 2 = 0 then j else 0 fi)
+    4. i < n
+    5. v₀ = n - i
+  quiero ver que:
+    1. n-(i+2) < v₀ 
+    // reemplazando con (5)
+       ≡ n-(i+2) < n-i
+
+
+5. I ∧ fv ≤ 0 ⟹ ¬B
+  tengo I ∧ fv ≤ 0:
+    1. 0 ≤ i ≤ n+1 
+    2. i mod 2 = 0 
+    3. result = (∑ j=0 i-1)(if j mod 2 = 0 then j else 0 fi)
+    4. n-i ≤ 0
+  quiero probar ¬B:
+    1. i ≥ n 
+    // de (4) n-i ≤ 0 ≡ n ≤ i que era lo que queria probar
+
+Fin de la prueba
+
+//-----------------------------------------------------------------//
+//-----------------------------------------------------------------//
+//-------------------------Ejercicio 4-----------------------------//
+//-----------------------------------------------------------------//
+//-----------------------------------------------------------------//
+
+proc sumaDivisores(in n: ℤ, out result: ℤ) {
+  pre { n ≥ 1 }
+  post { result = (∑ j=0 n)(if n mod j = 0 then j else 0 fi) }
+}
+
+// a) escribir un programa en SmallLang que satisfaga la especificacion y contenga
+//    exactamente un ciclo
+
+i := 1;
+sumaDivisores := 0;
+while (i ≤ n) do
+  if (n mod i = 0)
+    sumaDivisores := sumaDivisores + i;
+  else
+    skip;
+  endif
+endwhile;
+
+// b) El ciclo propuesto, puede ser demostrado mediante el siguiente invariante?
+
+I ≡ 1 ≤ i ≤ n ∧ result = (∑ j=1 i)(if n mod j = 0 then j else 0 fi)
+
+el rango de i no va a valer cuando se temrmine la ultima iteracion, i=n+1:
+I ≡ 1 ≤ i ≤ n+1 ∧ result = (∑ j=1 i)(if n mod j = 0 then j else 0 fi)
+
+cuando entra en la primera iteracion i=1 y result=0, pero la sumatoria da 1.
+hay que achicar el rango para que valga antes de la primera y despues de la ultima
+iteracion:
+I ≡ 1 ≤ i ≤ n+1 ∧ result = (∑ j=1 i-1)(if n mod j = 0 then j else 0 fi)
+
+
+//-----------------------------------------------------------------//
+//-----------------------------------------------------------------//
+//--------------------------Ejercicio 7----------------------------//
+//-----------------------------------------------------------------//
+//-----------------------------------------------------------------//
+
 Resuelto en clase con Tomas.
 
 Pre { |s|=r ∧ r=r0 }
@@ -275,7 +461,14 @@ Encontrar fv:
 ---- Hasta aca copie y pegue la solucion porque me tuve que ir ---
 
 
-Ejercicio 9
+//-----------------------------------------------------------------//
+//-----------------------------------------------------------------//
+//---------------------------Ejercicio 9---------------------------//
+//-----------------------------------------------------------------//
+//-----------------------------------------------------------------//
+
+i := s.size() - 1;
+suma := 0;
 
 while (i >= length(s) / 2) do
   // suma va sumando desde el primer elemento
@@ -287,12 +480,145 @@ endwhile
 Pc ≡ {|s| mod 2 = 0 ∧ i = |s| - 1 ∧ suma = 0 }
 Qc ≡ {|s| mod 2 = 0 ∧ i = |s| / 2 - 1 ∧L suma = (⅀ j=0, (|s|/2)-1)(s[j])}
 
-a) Especificar un invariante de ciclo que permita demostrar que el ciclo cumple la 
-postcondicion.
+// a) Especificar un invariante de ciclo que permita demostrar que el ciclo cumple la 
+// postcondicion.
+
+I ≡ (|s|/2)-1 ≤ i ≤ |s|-1 ∧ |s| mod 2 = 0 ∧ suma = (∑ j=0 |s|-2-i)(s[j])
+
+con suma = (∑ j=0 |s|-1-i)(s[j]),
+  antes de la primer iteracion:
+    i=|s|-1 ⟹ suma = (∑ j=0 |s|-1-(|s|-1))(s[j]) = (∑ j=0 |s|-1-|s|+1)(s[j]) = (∑ j=0 0)(s[j]) = s[0]
+    -> no funciona
+
+con suma = (∑ j=0 |s|-2-i)(s[j]),
+  antes de la primer iteracion:
+    i=|s|-1 ⟹ suma = (∑ j=0 |s|-2-(|s|-1))(s[j]) = (∑ j=0 |s|-2-|s|+1)(s[j]) = (∑ j=0 -1)(s[j]) = 0 // funciona
+  despues de la primer iteracion:
+    suma = s[0] ∧ i = |s|-2 ⟹
+    suma = (∑ j=0 |s|-2-(|s|-2))(s[j]) = (∑ j=0 |s|-2-|s|+2)(s[j]) =(∑ j=0 0)(s[j]) = s[0] // funciona
+
+// b) Especificar una funcion variante para demostrar que el ciclo termina.
+
+ B ≡ i ≥ |s| / 2
+¬B ≡ i < |s| / 2
+
+fv ≡ i - |s|/2 + 1
+fv₀ ≡ |s| - |s|/2 + 1 = |s|/2 + 1 
+fv[ultimoPreciclo]  ≡ |s|/2     - |s|/2 + 1 = 1
+fv[ultimoPostCiclo] ≡ |s|/2 - 1 - |s|/2 + 1 = 0
 
 
+// c) Demostrar formalmente la correccion y terminacion del ciclo usando el TdI.
 
-Ejercicio 10
+1. Pc ⟹ I
+  tengo Pc:
+    1. |s| mod 2 = 0
+    2. i = |s|-1
+    3. suma = 0
+  qvq I:
+    1. (|s|/2)-1 ≤ i ≤ |s|-1 ≡ (|s|/2)-1 ≤ i ∧ i ≤ |s|-1 
+    // reemplazo i segun (2)
+    ≡ (|s|/2)-1 ≤ |s|-1 ∧ |s|-1 ≤ |s|-1 // ambas son trivialmente true
+    2. |s| mod 2 = 0 // es trivial por (1)
+    3. suma = (∑ j=0 |s|-2-i)(s[j]) // reemplazo i con (2)
+      ≡ suma = (∑ j=0 |s|-2-(|s|-1))(s[j]) = (∑ j=0 |s|-2-|s|+1)(s[j]) = (∑ j=0 -1)(s[j]) = 0 = suma 
+      // es trivial por (3)
+
+2. {I ∧ B} S {I}
+
+  {I ∧ B} ⟹ wp(S, I)
+  
+  // Axioma3
+  wp(S1, wp(S2, I)) ≡ wp(S1, E1) ≡ E2
+
+  calculo E1
+  wp(i := i-1, (|s|/2)-1 ≤ i ≤ |s|-1 ∧ |s| mod 2 = 0 ∧ suma = (∑ j=0 |s|-2-i)(s[j]))
+  // Axioma1
+  ≡ def(i-1) ∧L (|s|/2)-1 ≤ i-1 ≤ |s|-1 ∧ |s| mod 2 = 0 ∧ suma = (∑ j=0 |s|-2-(i-1))(s[j])
+  // 1 esta def y las variables las asumimos definidas // sumo 1 a todos los terminos del rango de i // resuelvo rango de sumatoria
+  ≡ (|s|/2) ≤ i ≤ |s| ∧ |s| mod 2 = 0 ∧ suma = (∑ j=0 |s|-1-i)(s[j])
+
+  reemplazo E1 en E2
+  E2 ≡ wp(suma := suma + s[|s|-1-i], (|s|/2) ≤ i ≤ |s| ∧ |s| mod 2 = 0 ∧ suma = (∑ j=0 |s|-1-i)(s[j]))
+  // Axioma 1
+  ≡ def(suma + s[|s|-1-i]) ∧L (|s|/2) ≤ i ≤ |s| ∧ |s| mod 2 = 0 ∧ suma + s[|s|-1-i] = (∑ j=0 |s|-1-i)(s[j]))
+  // resuelvo el def
+  ≡ 0 ≤ |s|-1-i < |s| ∧L (|s|/2)≤i≤|s| ∧ |s| mod 2 = 0 ∧ suma + s[|s|-1-i] = (∑ j=0 |s|-1-i)(s[j]))
+  // pasaje de terminos en el primer termino y multiplicacion por -1
+  ≡ 0 ≤ i ≤ |s|-1 ∧L (|s|/2)≤i≤|s| ∧ |s| mod 2 = 0 ∧ suma + s[|s|-1-i] = (∑ j=0 |s|-1-i)(s[j]))
+  // entre los primeros dos terminos queda
+  ≡ (|s|/2)≤i≤|s|-1 ∧ |s| mod 2 = 0 ∧ suma + s[|s|-1-i] = (∑ j=0 |s|-1-i)(s[j]))
+  // extraigo el ultimo termino de la sumatoria y paso restando el s[...]
+  ≡ (|s|/2)≤i≤|s|-1 ∧ |s| mod 2 = 0 ∧ suma  = (∑ j=0 |s|-2-i)(s[j])) + s[|s|-1-i] - s[|s|-1-i]
+  ≡ (|s|/2)≤i≤|s|-1 ∧ |s| mod 2 = 0 ∧ suma  = (∑ j=0 |s|-2-i)(s[j]))
+  
+  tengo {I ∧ B}:
+    1. (|s|/2)-1 ≤ i ≤ |s|-1 
+    2. |s| mod 2 = 0 
+    3. suma = (∑ j=0 |s|-2-i)(s[j])
+    4. i ≥ |s|/2
+  qvq wp(S, I):
+    1. (|s|/2) ≤ i ≤ |s|-1 // la primera desigualdad se implica de (4) y la segunda de (1)
+    2. |s| mod 2 = 0 // equivalente a (2)
+    3. suma  = (∑ j=0 |s|-2-i)(s[j])) // equivalente a (3)
+            
+3. I ∧ ¬B ⟹ Qc
+  tengo I ∧ ¬B:
+    1. (|s|/2)-1 ≤ i ≤ |s|-1 
+    2. |s| mod 2 = 0 
+    3. suma = (∑ j=0 |s|-2-i)(s[j])
+    4. i < |s|/2 
+  qvq Qc:
+    1. |s| mod 2 = 0 // es trivial por (2)
+    2. i = (|s|/2)-1 
+    // (4) i < |s|/2 ∧ (1) (|s|/2)-1 ≤ i
+    // (4) i ≤ (|s|/2)-1 ∧ (1) (|s|/2)-1 ≤ i
+    // (|s|/2)-1 ≤ i ≤ (|s|/2)-1 ⟹ i = (|s|/2)-1 que era lo que queria probar
+    3. suma = (⅀ j=0, (|s|/2)-1)(s[j])
+    // reemplazo en (3) i = (|s|/2)-1 (1 y 4)
+    // suma = (∑ j=0 |s|-2-((|s|/2)-1))(s[j]) = (∑ j=0 |s|-2-(|s|/2)+1)(s[j]) = (∑ j=0 (|s|/2)-1)(s[j]) que era lo que queria probar
+
+4. {I ∧ B ∧ v₀ = fv} S {fv < v₀}
+  quiero ver que {I ∧ B ∧ v₀ = fv} ⟹ wp(S, fv < v₀)
+
+  calculo wp(S, fv < v₀) ≡ wp(S1; S2, fv < v₀)
+  // Axioma 3
+  ≡ wp(S1, wp(S2, fv < v₀)) ≡ wp(S1, E1)
+
+  calculo E1
+  wp(S2, fv < v₀)
+  ≡ wp(i := i-1, i - |s|/2 + 1 < v₀)
+  // Axioma 1
+  ≡ def(i-1) ∧L i - 1 - |s|/2 + 1 < v₀
+  // asumimos que las variables estan definidas, las constantes estan definidas
+  ≡ i - |s|/2 < v₀
+
+  tengo {I ∧ B ∧ v₀ = fv}:
+    1. (|s|/2)-1 ≤ i ≤ |s|-1 
+    2. |s| mod 2 = 0 
+    3. suma = (∑ j=0 |s|-2-i)(s[j])    
+    4. i ≥ |s| / 2
+    5. v₀ = i - |s|/2 + 1
+  qvq wp(S, fv < v₀):
+    1. i - |s|/2 < v₀ // reemplazo con (5)
+       i - |s|/2 < i - |s|/2 + 1 
+       0 < 1 // es true
+
+5. I ∧ fv ≤ 0 ⟹ ¬B
+  tengo I ∧ fv ≤ 0:
+    1. (|s|/2)-1 ≤ i ≤ |s|-1 
+    2. |s| mod 2 = 0 
+    3. suma = (∑ j=0 |s|-2-i)(s[j]) 
+    4. i - |s|/2 + 1 ≤ 0   
+  qvq ¬B:
+    1. i < |s|/2 // arreglando (4) i ≤ |s|/2 - 1 ≡ i < |s|/2 que era lo que queria probar
+  
+//-----------------------------------------------------------------//
+//-----------------------------------------------------------------//
+//---------------------------Ejercicio 10--------------------------//
+//-----------------------------------------------------------------//
+//-----------------------------------------------------------------//
+
 
 proc reemplazarTodos(inout:seq〈ℤ〉,in a: ℤ,in b: ℤ){
   Pre{s=S0}
