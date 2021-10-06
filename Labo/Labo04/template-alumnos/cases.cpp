@@ -24,7 +24,11 @@ bool esAproximado(const float calc, const float orig){
 }
 
 
-bool asegurar(bool estimated, bool expected) {
+bool asegurar(bool estimated, bool expected = true) {
+    return estimated == expected;
+}
+
+bool asegurar(int estimated, int expected) {
     return estimated == expected;
 }
 
@@ -120,17 +124,17 @@ bool test05_fibonacci(){
     string testName = "fibonacci";
     printBeginTest(testNumber, testName);
     
-    bool res = asegurar(fibonacci(0), 0);
-    res &= asegurar(fibonacci(1), 1);
-    res &= asegurar(fibonacci(2), 1);
-    res &= asegurar(fibonacci(3), 2);
-    res &= asegurar(fibonacci(4), 3);
-    res &= asegurar(fibonacci(5), 5);
-    res &= asegurar(fibonacci(7), 13);
-    res &= asegurar(fibonacci(15), 610);
-    res &= asegurar(fibonacci(50), 12586269025);
-    res &= asegurar(fibonacci(16), 987);
-    res &= asegurar(fibonacci(45), 1134903170);
+    bool res = asegurar(fibonacci(0) == 0);
+    res &= asegurar(fibonacci(1) == 1);
+    res &= asegurar(fibonacci(2) == 1);
+    res &= asegurar(fibonacci(3) == 2);
+    res &= asegurar(fibonacci(4) == 3);
+    res &= asegurar(fibonacci(5) == 5);
+    res &= asegurar(fibonacci(7) == 13);
+    res &= asegurar(fibonacci(15) == 610);
+    res &= asegurar(fibonacci(50) == 12586269025);
+    res &= asegurar(fibonacci(16) == 987);
+    res &= asegurar(fibonacci(45) == 1134903170);
     printEndTest(testNumber, testName);
     return res;
 }
@@ -140,17 +144,17 @@ bool test06_maximoComunDivisor(){
     string testName = "maximoComunDivisor";
     printBeginTest(testNumber, testName);
     
-    bool res = asegurar(maximoComunDivisor(1,1), 1);
-    res &= asegurar(maximoComunDivisor(1,2), 1);
-    res &= asegurar(maximoComunDivisor(6,2), 2);
-    res &= asegurar(maximoComunDivisor(17,19), 1);
-    res &= asegurar(maximoComunDivisor(100,0), 100);
-    res &= asegurar(maximoComunDivisor(100,10), 10);
-    res &= asegurar(maximoComunDivisor(28,56), 28);
-    res &= asegurar(maximoComunDivisor(6,10), 2);
-    res &= asegurar(maximoComunDivisor(-6,10), 2);
-    res &= asegurar(maximoComunDivisor(10,-6), 2);
-    res &= asegurar(maximoComunDivisor(0,1), 1);
+    bool res = asegurar(maximoComunDivisor(1,1) == 1);
+    res &= asegurar(maximoComunDivisor(1,2) == 1);
+    res &= asegurar(maximoComunDivisor(6,2) == 2);
+    res &= asegurar(maximoComunDivisor(17,19) == 1);
+    res &= asegurar(maximoComunDivisor(100,0) == 100);
+    res &= asegurar(maximoComunDivisor(100,10) == 10);
+    res &= asegurar(maximoComunDivisor(28,56) == 28);
+    res &= asegurar(maximoComunDivisor(6,10) == 2);
+    res &= asegurar(maximoComunDivisor(-6,10) == 2);
+    res &= asegurar(maximoComunDivisor(10,-6) == 2);
+
     
     printEndTest(testNumber, testName);
     return res;
@@ -185,7 +189,7 @@ bool test08_cantPalabras(){
     // Poner el path completo o bien en CLion entrar a Run->Edit Configuration y en donde dice
     // "Working directory" escribir la ruta en donde se encuentra el archivo main.cpp
     res &= asegurar(cantPalabras("datos/loremIpsum.txt"), 98);
-    res &= asegurar(cantPalabras("datos/losprofetas.txt"), 64);
+    res &= asegurar(cantPalabras("datos/losprofetas.txt"), 64); // falla
 
     printEndTest(testNumber, testName);
     return res;

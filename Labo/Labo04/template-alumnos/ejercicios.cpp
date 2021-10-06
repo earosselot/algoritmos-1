@@ -128,9 +128,7 @@ float desvioEstandar(vector<float> v)
 long fibonacci(int k)
 {
   if (k == 0)
-  {
     return 0;
-  }
   else
   {
     if (k == 1)
@@ -160,47 +158,31 @@ long fibonacci(int k)
 int maximo(int x, int y)
 {
   if (x < 0)
-  {
     x = -x;
-  }
   if (y < 0)
-  {
     y = -y;
-  }
   if (x > y)
-  {
     return x;
-  }
   else
-  {
     return y;
-  }
 }
 
 int minimo(int x, int y)
 {
   if (x < 0)
-  {
     x = -x;
-  }
   if (y < 0)
-  {
     y = -y;
-  }
   if (x < y)
-  {
     return x;
-  }
   else
-  {
     return y;
-  }
 }
 
 int maximoComunDivisor(int x, int y)
 {
-  int mayor = maximo(x, y);
-  int menor = minimo(x, y);
+  int mayor = maximo(x, y); // 100
+  int menor = minimo(x, y); // 0
   int resto = 1;
   while (resto != 0 && menor != 0)
   {
@@ -209,13 +191,9 @@ int maximoComunDivisor(int x, int y)
     menor = resto;
   }
   if (resto == 0)
-  {
     return mayor;
-  }
   else
-  {
     return 1;
-  }
 }
 
 /************* Ejercicio 7 *************/
