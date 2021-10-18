@@ -1,0 +1,153 @@
+//-----------------------------------------------------------------//
+//-----------------------------------------------------------------//
+//---------------------------Ejercicio 1---------------------------//
+//-----------------------------------------------------------------//
+//-----------------------------------------------------------------//
+
+Pc: { |s| = 2*|t| ∧ i = 0 }
+
+while (i < s.size()) do 
+  t[i div 2] := s[i] + s[i+1];
+  i := i + 2;
+endwhile
+
+Qc: { |s| = 2*|t| ∧L (∀k: ℤ)( 0 <= k < (|s| div 2) ⟹L t[k] = s[2*k] + s[2*k+1]) }
+
+s = [1, 2, 3, 4, 5, 6]
+t = [3, 7, 11]
+
+i = s.size()
+
+proponer invariante: 
+  I ≡ (|s| = 2*|t| ∧ 0 <= i <= |s|) ∧L (∀k: ℤ)( 0 <= k < (i div 2) ⟹L t[k] = s[2*k] + s[2*k+1]) 
+
+demostrar que se verifican:
+
+a) Pc ⟹ I
+  tengo que: 
+    Pc1. |s| = 2*|t|
+    Pc2. i = 0
+  qvq:
+    1. |s| = 2*|t| // es trivial por Pc1
+    2. 0 <= i <= |s| // por Pc2 i = 0, entonces 0 <= 0 es true y 0 <= |s| es true para cualquier natural |s|
+    3. (∀k: ℤ)( 0 <= k < (i div 2) ⟹L t[k] = s[2*k] + s[2*k+1]) // como i = 0 por Pc2
+        ≡ (∀k: ℤ)( 0 <= k < (0 div 2) ⟹L t[k] = s[2*k] + s[2*k+1])
+        ≡ (∀k: ℤ)( 0 <= k < 0 ⟹L t[k] = s[2*k] + s[2*k+1])
+        ≡ (∀k: ℤ)( 0 <= k <= -1 ⟹L t[k] = s[2*k] + s[2*k+1])
+        // este paratodo es siempre true porque el antecedente es siempre falso
+
+b) (I ∧ ¬B) ⟹ Qc
+  tengo:
+    I1. |s| = 2*|t|
+    I2. 0 <= i <= |s|
+    I3. (∀k: ℤ)( 0 <= k < (i div 2) ⟹L t[k] = s[2*k] + s[2*k+1])
+    ¬B. i >= |s|
+  qvq:
+    Qc1. |s| = 2*|t| // es trivial por I1
+    Qc2. (∀k: ℤ)( 0 <= k < (|s| div 2) ⟹L t[k] = s[2*k] + s[2*k+1])
+      // de I2 y B: i = |s|, reemplazando i en I3
+      I3 ≡ (∀k: ℤ)( 0 <= k < (|s| div 2) ⟹L t[k] = s[2*k] + s[2*k+1])
+      // esto es igual a Qc2, por lo tanto vale.
+
+
+c) {I ∧ B} <cuerpoCiclo> {I}
+  para que valga esta tripla de Hoare se tiene que cumplir que:
+    E1 ≡ (I ∧ B) ⟹ wp(<cuerpoCiclo>, I)
+  
+  calculo la wp:
+    E2 ≡ wp(<cuerpoCiclo>, I) // reemplazo cuerpoCiclo
+    ≡ wp(t[i div 2] := s[i] + s[i+1];i := i + 2, I) // Axioma 3
+    ≡ wp(t[i div 2] := s[i] + s[i+1], wp(i := i + 2, I)) // calculo la wp anidada
+
+    wp anidada:
+      E3 ≡ wp(i := i + 2, I) // Axioma1
+      ≡ def(i + 2) ∧L I(i, i+2)) // def(i+2) es true porque asumimos las variables definidas y la suma no se indefine
+      ≡ (|s| = 2*|t| ∧ 0 <= i+2 <= |s|) ∧L (∀k: ℤ)( 0 <= k < (i+2 div 2) ⟹L t[k] = s[2*k] + s[2*k+1])
+    
+    vuelvo a E2:
+    E2 ≡ wp(t[i div 2] := s[i] + s[i+1], E3)        // reemplazo por setAt
+    ≡ wp(t := setAt(t, i div 2, s[i] + s[i+1]), E3) // Axioma 1
+    ≡ def(s[i] + s[i+1]) ∧L E3(t, setAt(t, i div 2, s[i] + s[i+1]))  // reluelvo el def y reemplazo t en E3 (salvo donde es |t|)
+    ≡ 0 <= i <= |s| - 2 ∧L (|s| = 2*|t| ∧ 0 <= i+2 <= |s|) ∧L 
+        (∀k: ℤ)( 0 <= k < (i+2 div 2) ⟹L setAt(t, i div 2, s[i] + s[i+1])[k] = s[2*k] + s[2*k+1])
+    // los terminos que acotan el rango de i son equivalentes
+    ≡ (|s| = 2*|t| ∧ 0 <= i+2 <= |s|) ∧L 
+        (∀k: ℤ)( 0 <= k < (i+2 div 2) ⟹L setAt(t, i div 2, s[i] + s[i+1])[k] = s[2*k] + s[2*k+1])
+
+  asumo { I ∧ B }:
+    I1. |s| = 2*|t|
+    I2. 0 <= i <= |s|
+    I3. (∀k: ℤ)( 0 <= k < (i div 2) ⟹L t[k] = s[2*k] + s[2*k+1])
+     B. i < |s|
+  y quiero ver que se cumple E2:  
+    E21. |s| = 2*|t| // es trivial por I1
+    E22. 0 <= i+2 <= |s| // de I2 y B: 0 <= i <= |s| - 1
+                         // sumo 2 a ambos lados de la segunda desigualdad: 0 <= i+2 <= |s| + 1
+                         // esto implica a E22, porque 
+    E23. (∀k: ℤ)( 0 <= k < (i+2 div 2) ⟹L setAt(t, i div 2, s[i] + s[i+1])[k] = s[2*k] + s[2*k+1])
+
+    
+
+
+
+//-----------------------------------------------------------------//
+//-----------------------------------------------------------------//
+//---------------------------Ejercicio 2---------------------------//
+//-----------------------------------------------------------------//
+//-----------------------------------------------------------------//
+
+a) 
+
+pred esPerm(s: seq〈ℤ〉) {
+  tieneTodosLosNumeros(s) ∧ |s| > 0
+
+pred tieneTodosLosNumeros(s: seq〈ℤ〉) {
+  (∀x: ℤ)(0 <= x < |s| ⟹L (∃k: ℤ)(0 <= k < |s| ∧L s[k] = x))
+}
+
+
+b) 
+
+pred genera(cadena: seq〈seq ⟨ℤ⟩〉, is: seq ⟨ ℤ x ℤ ⟩) {
+  |is| == |cadena| - 1 ∧L
+  esPerm(cadena[0]) ∧L
+  permutacionesValidas(cadena, is) ∧L 
+  esMatriz(cadena) ∧L
+  generadoPorPermutaciones(cadena, is)
+}
+
+
+pred esMatriz(cadena) {
+  (∃x: ℤ)(∀i: ℤ)(0 <= i < |cadena| ⟹L |cadena[i]| = x)
+}
+
+pred permutacionesValidas(cadena: seq〈seq ⟨ℤ⟩〉, is: seq ⟨ ℤ x ℤ ⟩) {
+  (∀i: ℤ)()
+}
+
+pred generadoPorPermutaciones(cadena: seq〈seq ⟨ℤ⟩〉, is: seq ⟨ ℤ x ℤ ⟩) {
+  (∀i: ℤ)(1 <= i < |cadena| ⟹L sonPermutacion(cadena[i-1], cadena[i], is[i-1]))
+}
+// cadena [i-1] compara con el anterior
+// is[i-1] es porque la primera permutacion es el elemento 0 y i arranca en 1.
+
+pred sonPermutacion(aPermutar: seq〈ℤ〉,permutada: seq〈ℤ〉, int: ℤ x ℤ) {
+  (∀i: ℤ)(0 <= i <= |permutada| ∧ i != int₀ ∧ i != int₁ ⟹L permutada[i] = aPermutar[i]) ∧
+  permutada[int₀] = aPermutar[int₁] ∧ permutada[int₁] = aPermutar[int₀]
+}
+
+
+c) 
+
+proc ordenaPermutacion(in p: seq〈ℤ〉, out is: seq ⟨ ℤ x ℤ ⟩) {
+  pre { esPerm(p) }
+  post { 
+    (∃cadena: seq ⟨seq〈ℤ⟩)
+      ( |cadena| > 0 ∧L 
+        (cadena[0] = p ∧ 
+        ordenada?(cadena[ |cadena| - 1 ] ∧ 
+        genera(cadena, is)])))
+  }
+};
+
+

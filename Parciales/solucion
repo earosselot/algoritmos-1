@@ -1,0 +1,71 @@
+1 <= i < |s| CAND (r = true AND s[i - 1] == s[i]) IFF ((Ex : Z)(Vk : Z)
+(0 <= k <= i IMPLIES s[k] = x)
+
+/*
+Separo el ultimo caso en el IMPLIES
+*/
+
+wp(s1, wp(s2, i)) =
+
+1 <= i < |s| CAND
+
+((r = true AND s[i - 1] == s[i]) IFF 
+((Ex : Z)(Vk : Z)
+(0 <= k < i IMPLIES s[k] = x) AND s[i - 1] == s[i]) = (*)
+
+p: r = true
+q: ((Ex : Z)(Vk : Z)(0 <= k < i IMPLIES s[k] = x)
+p: s[i - 1] == s[i]
+
+
+(r ^ p) IFF (q ^ p)
+r q p
+t f t
+f t t
+
+¬ ((r ^ ¬q ^ p) v (¬r ^ q ^ p))
+((¬r v q v ¬p) ^ (r v ¬q v ¬p))
+((¬r v q) ^ (r v ¬q)) v ¬p
+(r IFF q) v ¬p
+
+r q 
+t t t
+f f t
+t f f
+f t f
+
+(*) =
+----------------------
+p: r = true
+q: ((Ex : Z)(Vk : Z)(0 <= k < i IMPLIES s[k] = x)
+p: s[i - 1] == s[i]
+(r IFF q) v ¬p
+----------------------
+
+1 <= i < |s| CAND
+((r = true sii ((Ex : Z)(Vk : Z)(0 <= k < i IMPLIES s[k] = x)) v s[i - 1] != s[i])
+
+
+
+
+I = 1 <= i <= |s| CAND r = true IFF (Ex)(Vk)(0 <= k < i --->L s[k] = x)
+B = i < |s|
+
+wp(s1, wp(s2, i)) =
+1 <= i < |s| CAND
+((r = true AND s[i - 1] == s[i]) IFF 
+((Ex : Z)(Vk : Z)
+(0 <= k < i IMPLIES s[k] = x) AND s[i - 1] == s[i]) = (*)
+
+Veamos que vale la wp, suponiendo que vale I ^ B
+
+1 <= i < |s| vale porque i < |s| por B y i >= 1 por I
+
+Veamos que vale el sii
+=>) Sup que vale (r = true AND s[i - 1] == s[i])
+	(Ex : Z)(Vk : Z)(0 <= k < i IMPLIES s[k] = x) vale por I y r = true
+	s[i - 1] == s[i] vale porque lo supusimos
+	
+<=) Sup que vale ((Ex : Z)(Vk : Z)(0 <= k < i IMPLIES s[k] = x) AND s[i - 1] == s[i])
+	r = true vale por lo que supusimos y por el sii del invariante
+	s[i - 1] == s[i] vale porque lo supusimos
