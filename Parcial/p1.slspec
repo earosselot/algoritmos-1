@@ -1,0 +1,168 @@
+Pc ≡ n>=0 ∧ s = (n * (n+1)) div 2 ∧ t = n)
+
+while (s > 0) do
+  s := s - t;     // S1
+  t := t - 1;     // S2
+endwhile  
+
+Qc ≡ s == 0  ∧  t == 0
+
+Pc ≡ n>=0 ∧ s = (n * (n+1)) div 2 ∧ t = n)
+// por la definicion que dan:
+Pc ≡ n>=0 ∧ s = ∑(k=1, n)(k) ∧ t = n)
+
+I ≡ s = ∑(k=1, t)(k) ∧ 0 <= t <= n 
+
+I ≡ s = (t * (t+1)) div 2 ∧ 0 <= t <= n // esto no lo use
+
+ B ≡ s > 0
+¬B ≡ s <= 0
+
+a) (I ∧ ¬B) ⟹ Qc
+
+  tengo (I ∧ ¬B):
+    // I1. s = (t * (t+1)) div 2 // esto no lo use
+    I1. s = ∑(k=1, t)(k)
+    I2. 0 <= t <= n
+    ¬B. s <= 0
+  quiero ver que Qc:
+    Qc1. s == 0  
+    Qc2. t == 0
+    // de I1 y -B sabemos que: ∑(k=1, t)(k) <= 0 y de I2 sabemos que 0 <= t <= n. 
+    // El unico valor de t que cumple con ambas premisas es t=0. por lo tanto implica Qc2.
+    // y si t = 0 entonces por I1, s = 0 por rango vacio de la sumatoria. esto implca Qc1.
+
+b) {I ∧ B} <cuerpo del ciclo> {I}
+
+  // por definicion de tripla de Hoare, para que esto se cumpla tengo que probar que:
+  I ∧ B ⟹ wp(<cuerpo del ciclo>, I)
+
+  1. calculo E1 ≡ wp(<cuerpo del ciclo>, I)
+    E1 ≡ wp(S1; S2, I)
+    // Axioma3
+    ≡ wp(S1, wp(S2, I))
+
+  2. calculo E2 ≡  wp(S2, I)
+    // reemplazo S2
+    ≡ wp(t := t - 1, I)
+    // Axioma 1
+    ≡ def(t-1) ∧L I^(t)_(t-1) 
+    // Asumimos que todas las variables estan definidas y las constantes tambien. La resta no se indefine, entonces def(t-1) = true
+    ≡ I^(t)_(t-1) 
+    // Reemplazo en I
+    E2 ≡ s = ∑(k=1, t-1)(k) ∧ 0 <= t-1 <= n
+
+  3. reemplazo E2 en E1
+    E1 ≡ wp(s := s - t, E2) 
+    // Axioma 1
+    ≡ def(s-t) ∧L E2^(s)_(s-t)
+    // variables definidas.
+    ≡ E2^(s)_(s-t)
+    // Hago el reemplazo en el predicado
+    ≡ s-t = ∑(k=1, t-1)(k) ∧ 0 <= t-1 <= n
+    // en el primer termino sumo t a ambos lados
+    ≡ s = ∑(k=1, t-1)(k) + t ∧ 0 <= t-1 <= n
+    // por definicion de sumatoria - separo casos de t-1
+    E1 ≡ s = ∑(k=1, t)(k) ∧ 0 <= t-1 <= n
+
+    
+    tengo I ∧ B: 
+      I1. s = ∑(k=1, t)(k)
+      I2. 0 <= t <= n
+      B.  s > 0
+
+    quiero ver que  implica wp(<cuerpo del ciclo>, I) ≡ E1:
+      E11. s = ∑(k=1, t)(k) // es trivial porque es igual a I1
+      E12. 0 <= t-1 <= n    // de I2 si t <= n entonces t-1 <= n
+                            // de I2 tengo que 0 <= t. pero si t=0 entonces s=0 y s>0 por B. Por lo tanto, 0 < t ≡ 0 <= t - 1 
+
+
+
+Ejercicio 2
+
+Codigo: seq <Palabra x ℤ>
+Palabra: seq <Char>
+
+cod = [(["b"], 1), (["a", "n"] ,2), (["a"], 1)]
+pal = ["b", "a", "n", "a", "n", "a"]
+
+a) 
+
+pred esDescompresion(cod: Codigo, pal: Palabra) {
+  |pal| = sumaCaracteresAnteriores(cod, |cod|) ∧
+  (∀k: ℤ)(0 <= k < |cod| ⟹L 
+    (∀j: ℤ)(0 <= j < |cod[k]₀| ⟹L 
+      (∀rep: ℤ)(1 <= rep < cod[k]₁ ⟹L 
+        cod[k]₀[j] = pal[ sumaCaracteresAnteriores(cod, k) + j + (rep * |cod[k]₀[j]|) ] ) ) )
+}
+
+aux sumaCaracteresAnteriores(cod, i) = (∑ k = 0, i-1)( |cod[k]₀| * cod[k]₁ )
+
+b)
+
+proc comprimir(in pal: Palabra, out cod: Codigo) {
+  Pre {true}
+  Post { esDescompresion(cod, pal) ∧ noHayFragmentosVacios(cod) ∧ noHayRepeticionesNulas(cod) }
+}
+
+pred noHayFragmentosVacios(cod: Codigo) {
+  (∀k: ℤ)(0 <= k < |cod| ⟹L |cod[k]₀| > 0 )
+}
+
+pred noHayRepeticionesNulas(cod: Codigo) {
+  (∀k: ℤ)(0 <= k < |cod| ⟹L cod[k]₁ > 0 )
+}
+
+c)
+
+proc OptimizarCodigo(inout: cod: Codigo) {
+  Pre { cod = COD₀ }
+  Post { (∃pal: Palabra) (esDescompresion(pal, cod) ∧ esDescompresion(pal, COD₀)) ∧ costo(cod) <= costo(COD₀)  }
+}
+
+
+Ejercicio 3
+
+wp(if B then S1 else S2 endif, Post) ≡ def(B) ∧L ((B ∧ wp(S1, Post)) ∨ (¬B ∧ wp(S2, Post)))
+
+Post ≡ posicionesCorrespondientes(s, k+1, i, j)
+
+a) wp(S, Post)
+  ≡ wp(if B then S1 else S2 endif, Post)
+  // Axioma 4
+  ≡ def(B) ∧L ((B ∧ wp(S1, Post)) ∨ (¬B ∧ wp(S2, Post)))
+  ≡ def(s[k] = 0) ∧L ((B ∧ E1) ∨ (¬B ∧ E3))
+  ≡ 0 <= k < |s| ∧L ((B ∧ E1) ∨ (¬B ∧ E3))
+ 
+  calculo E1 ≡ wp(S1, Post)
+  ≡ wp(S11; S12, Post)
+  // Axioma 3
+  ≡ wp(S11, wp(S12, Post))
+
+    calculo E2 ≡ wp(S12, Post)
+    ≡ wp(j := 0, Post)
+    // Axioma 1
+    ≡ def(0) ∧L Post^j_0
+    // 0 esta definido
+    ≡ posicionesCorrespondientes(s, k+1, i, 0)
+
+    reemplazo E2 en E1:
+      E1 ≡ wp(i := i + 1, E2)
+      // Axioma 1
+      ≡ def(i + 1) ∧L E2^(i)_(i+1)
+      // las variables estan definidas. La suma no se indefine
+      E1 ≡ posicionesCorrespondientes(s, k+1, i+1, 0)
+
+  calculo E3 ≡ wp(S2, Post):
+  ≡ wp(j := j + 1, Post)
+  // Axioma 1
+  ≡ def(j+1) ∧L Post^j_(j+1)
+  // las vbles estan definidas. la suma no se indefine
+  E3 ≡ posicionesCorrespondientes(s, k+1, i, j+1)
+
+  entonces:
+  wp(S, Post) ≡ 0 <= k < |s| ∧L 
+    ((s[k] = 0 ∧ posicionesCorrespondientes(s, k+1, i+1, 0)) ∨ 
+      (s[k] != 0 ∧ posicionesCorrespondientes(s, k+1, i, j+1)))
+
+
