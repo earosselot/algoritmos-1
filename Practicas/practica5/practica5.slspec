@@ -702,20 +702,26 @@ I ≡ 0≤i≤|s| ∧ |s|=|S0| ∧L
   ≡ def(setAt(s, i, b)) ∧L 0≤i+1≤|setAt(s, i, b)| ∧ |setAt(s, i, b)|=|S0| ∧L
     (∀j:Z)((0≤j<i+1 ∧L S₀[j] = a) ⟹L setAt(s, i, b)[j] = b ) ∧ 
     (∀j:Z)((0≤j<i+1 ∧L S₀[j] ≠ a) ⟹L setAt(s, i, b)[j] = S₀[j])
-  // def y |setAt(s, i, b)|=|s|
-  ≡ 0≤i<|s| ∧L 0≤i+1≤|s| ∧ |s|=|S0| ∧L
+  // def y |setAt(s, i, b)| = |s|
+  ≡ 0≤i<|s| ∧L 0≤i+1≤|s| ∧ |s| = |S0| ∧L
     (∀j:Z)((0≤j<i+1 ∧L S₀[j] = a) ⟹L setAt(s, i, b)[j] = b ) ∧ 
     (∀j:Z)((0≤j<i+1 ∧L S₀[j] ≠ a) ⟹L setAt(s, i, b)[j] = S₀[j])
   // separo caso i=j
-  ≡ 0≤i<|s| ∧L 0≤i+1≤|s| ∧ |s|=|S0| ∧L
+  ≡ 0≤i<|s| ∧L 0≤i+1≤|s| ∧ |s| = |S0| ∧L
     (∀j:Z)((0≤j<i+1 ∧L S₀[j] = a) ⟹L setAt(s, i, b)[j] = b ) ∧ (S₀[i] = a ⟹L setAt(s, i, b)[i] = b)
     (∀j:Z)((0≤j<i+1 ∧L S₀[j] ≠ a) ⟹L setAt(s, i, b)[j] = S₀[j]) ∧ (S₀[i] ≠ a ⟹L setAt(s, i, b)[i] = S₀[i])
   // simplifico setAt
-  ≡ 0≤i<|s| ∧L 0≤i+1≤|s| ∧ |s|=|S0| ∧L
+  ≡ 0≤ i < |s| ∧L 0≤i+1≤|s| ∧ |s| = |S0| ∧L
     (∀j:Z)((0≤j<i+1 ∧L S₀[j] = a) ⟹L s[j] = b ) ∧ (S₀[i] = a ⟹L b = b)
-    (∀j:Z)((0≤j<i+1 ∧L S₀[j] ≠ a) ⟹L s[j] = S₀[j]) ∧ (S₀[i] ≠ a ⟹L b[i] = S₀[i])
+    (∀j:Z)((0≤j<i+1 ∧L S₀[j] != a) ⟹L s[j] = S₀[j]) ∧ (S₀[i] ≠ a ⟹L b[i] = S₀[i])
 
 
 3. I ∧ ¬B ⟹ Qc
 
 
+1. P ⟹ I
+2. {I ∧ B} S {I}
+3. I ∧ ¬B ⟹ Q
+4. {I ∧ B ∧ v₀ = fv} S {fv < v₀}
+5. I ∧ fv ≤ 0 ⟹ ¬B
+6. {P} while B do S endwhile {Q}
