@@ -12,6 +12,9 @@ void swap(int& a, int& b){
     a = a - b;
 }
 
+void f5(vector<int> &v1, vector<int> &v2){vector<int> res(v1.size()+v2.size(),0);
+
+
 void trasponer(vector<vector<int>> &m) {
 	for (int i = 0; i < m.size(); i ++) 
 		for (int j = i + 1; j < m.size(); j ++) 
