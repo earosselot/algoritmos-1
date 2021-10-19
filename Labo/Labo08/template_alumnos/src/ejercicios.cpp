@@ -50,15 +50,11 @@ string rotar(string s, int v){
 	int indice;
 	for (int i = 0; i < s.size(); i++)
 	{
-		// indice = (i + (v % size)) % size;
 		indice = (size - (v % size) + i) % size;
 		rotada.push_back(s[indice]);
 	}
 	return rotada;
 }
-
-// s = [i, g, u, a, l]
-// rotar(s, 2) = [a, l, i, g, u]
 
 // no se puede usar substring
 string darVueltaK(string s, int k){
