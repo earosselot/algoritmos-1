@@ -3,8 +3,16 @@
 
 using namespace std;
 
-string rotar(string s, int j) {
-    // Completar aca
+string rotar(string s, int v){
+	int size = s.size();
+	string rotada;
+	int indice;
+	for (int i = 0; i < s.size(); i++)
+	{
+		indice = (size - (v % size) + i) % size;
+		rotada.push_back(s[indice]);
+	}
+	return rotada;
 }
 
 int main()
