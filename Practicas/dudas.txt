@@ -15,3 +15,13 @@ TP
 Teorica
   en el single responsability principle: debo tener un archivo que haga de union
     de las distintas responsabilidades?
+
+practica 8
+  2. f5
+    crear un vector de 0 de largo n implica n operaciones elementales?
+    O(n+m) es lo maximo a lo que se puede llegar?
+
+  4. la cantidad de apariciones no se me ocurre como calcularla.
+    entiendo que entre los 2 while cubren |v|, osea que la complejidad va a ser O(n),
+    pero no se como calcularla.
+  

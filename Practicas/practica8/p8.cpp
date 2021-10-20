@@ -59,4 +59,75 @@ void f4(vector<int> &vec)             // n = |vec|
   }                                   // t(n) = 4 + (6+(4 + 12000)) * 1000
 }                                     // t(n) = 12010000 -> O(1)
 
+void f5(vector<int> &v1, vector<int> &v2)  // n = |v1|, m = |v2|
+{
+  vector<int> res(v1.size()+v2.size(),0);  // 1 
+  // inicializa vector en O(|a|+|b|)
+  for(int i=0; i < v1.size(); i++)         // 1, 3, 3, n iteraciones
+  {
+    res[i]=v1[i]; // O(1)                  // 3
+  }                                        // t(n) = 4 + 3n
+  for(int i=0; i < v2.size(); i++)         // 1, 3, 3, m iteraciones
+  {
+    res[v1.size()+i]=v2[i];// O(1)         // 3
+  }                                        // t(m) = 4 + 3m
+  return; 
+}                                          // t(n,m) = 9 + 3n + 3m -> O(n+m)
+
+
+// Ejercicio 3
+
+  // a) Verdadero.
+  // b) Falso. Un programa puede tener un tiempo 10000n y el otro n, ambos son O(n), pero el primero tardaria mas.
+  // c) Verdadero.
+  // d) Verdadero.
+  // e) Falso. Depende de el rango de iteracion del ciclo.
+
+// Ejercicio 4
+
+  int mesetaMasLarga(vector<int> &v)          // n = |v|
+  {
+    int i = 0;                                // 1
+    int maxMeseta = 0;                        // 1
+    int meseta;                               // 1
+    while (i < v.size())                      // 1
+    {
+      int j = i + 1;                          // 2
+      while (j < v.size() && v[i] == v[j])    // 2, n - (i + 1)
+      {
+        j++;                                  //
+      }
+      meseta = j - i;
+      i = j;
+      if (meseta > maxMeseta) 
+      {
+        maxMeseta = meseta;
+      }
+    }
+    return maxMeseta;
+  }
+  
+  // a) Devuelve maxima cantidad de elementos repetidos contiguos en un vector.
+
+  // b) 
+
+  // c)
+
+    int mesetaMasLarga2(vector<int> &v)
+    {
+      maxMeseta = 0;
+      meseta = 1;
+      for (int i = 0; i < v.size() - 1; i++)
+      {
+        if (v[i] == v[i+1])
+          meseta += 1;
+        else
+          meseta = 1;
+        if (meseta > maxMeseta)
+          maxMeseta = meseta;
+      }
+      return maxMeseta;
+    }
+
+// Ejercicio 5
 
