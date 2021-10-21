@@ -27,9 +27,15 @@ vector<int> copiarSecuencia(vector<int> s)
 //-----------------------------------------------------------------//
 //-----------------------------------------------------------------//
 
-// Hecho en la clase
-
-
+void incSecuencia(vector<int> &a) 
+{
+  int i = 0;
+  while (i < a.size())
+  {
+    a[i] = a[i] + 1;
+  }
+  return;
+}
 
 //-----------------------------------------------------------------//
 //-----------------------------------------------------------------//
@@ -167,8 +173,9 @@ esPiramide(l, 3) === true
 
 Invariante A
 I === |l| = |L0| ^ |l|/2 <= i <= |l| ^L
+      (( i = |l|/2 ^ l = L0 ) v 
       (Ep: seq<Z>)(esPiramide(p, v) ^ |p| = |l| ^L 
-                   subseq(p, |l| - i, i) = subseq(l, |l| - i, i))
+                   subseq(p, |l| - i, i) = subseq(l, |l| - i, i)))
 
 Invariante B
 I === |l| = |L0| ^ 0 <= i <= |l| ^L piramideHastaI(l, i, v)
