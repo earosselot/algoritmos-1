@@ -46,12 +46,24 @@ TEST(llenarTaxis1, masSolosJuntos) {
 //--------------------------------------
 //--------------------------------------
 //--------------------------------------
-// llenarTaxis 2
+//           LLENAR TAXIS 2
+
+// ----------- Dominio 1 ---------------
 
 TEST(llenarTaxis2, todasMismoValor2) {
   int a = 4;
   int b = 4;
   int c = 4;
+
+  int result = llenarTaxis2(a, b, c);
+
+  EXPECT_EQ(result, 6);
+}
+
+TEST(llenarTaxis2, todasMismoValorImpar) {
+  int a = 7;
+  int b = 7;
+  int c = 7;
 
   int result = llenarTaxis2(a, b, c);
 
@@ -104,9 +116,9 @@ TEST(llenarTaxis3, todasMismoValor2) {
 }
 
 TEST(llenarTaxis3, solosJuntos3) {
-  int a = 6;
-  int b = 4;
-  int c = 4;
+  int a = 6; // 1 (1p+1p)
+  int b = 4; // 2 (2p+2p)
+  int c = 4; // 4 (3p+1p)
 
   int result = llenarTaxis3(a, b, c);
 
