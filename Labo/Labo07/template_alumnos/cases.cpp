@@ -164,9 +164,9 @@ bool multiplicarTest_test1(){
 	res[2][3] = 73;
 	res[2][4] = 85;
     
-    bool out = asegurar(multiplicar(m1,m2) == res, true);
-    cout << "Test Mat1: " << out << endl;
-    return out;
+  bool out = asegurar(multiplicar(m1,m2) == res, true);
+  cout << "Test Mat1: " << out << endl;
+  return out;
    
     
 }
@@ -251,9 +251,10 @@ bool contarPicosTest_test1(){
 		}
 	}
 
-    bool out = asegurar(contarPicos(vec) == 8, true);
-    cout << "Test 1: " << out << endl;
-    return out;
+  bool out = asegurar(contarPicos(vec) == 8, true);
+  cout << "Test 1: " << out << endl;
+
+  return out;
 }
 
 bool contarPicosTest_test2(){
@@ -263,9 +264,10 @@ bool contarPicosTest_test2(){
 			vec[2*i][2*j] = 1;
 		}
 	}
-    bool out = asegurar(contarPicos(vec) == 200, true);
-    cout << "Test 2: " << out << endl;
-    return out;
+  int picos = contarPicos(vec);
+  bool out = asegurar(contarPicos(vec) == 200, true);
+  cout << "Test 2: " << out << endl;
+  return out;
 }
 
 //////// Ejercicio 6 ////////////////

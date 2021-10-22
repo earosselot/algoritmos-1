@@ -11,7 +11,8 @@ set(SOURCE_FILES main.cpp
         cases.cpp
         cases.h
         ejercicios.cpp
-        ejercicios.h )
+        ejercicios.h
+        Test/diferenciaDiagonalesTest.cpp Test/productoVectorialTest.cpp Test/trasponerTest.cpp Test/multiplicarTest.cpp)
 
 add_executable(LaboMatrices ${SOURCE_FILES})
 
