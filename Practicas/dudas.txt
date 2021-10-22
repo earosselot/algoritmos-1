@@ -1,27 +1,7 @@
-Labo3
-cantApariciones
-  - Se pueden eliminar elementos de vectores por indice? v.pop_back(i)
-  - Hay objetos\diccionarios en c++ ?
+Labo7
+  donde hay que convertir las test a Gtest. la funcion main recibe unos argumentos
+  que se usan para inicializar los test, que son??
+    int main(int argc, char **argv) {
+      testing::InitGoogleTest(&argc, argv);
+    }
 
-TP
-  en el ejercicio 7:
-    - para usar las encuestas de inout hay que poner un yLuego ??
-    siempre se considera th como el th de salida
-    - en los de ordenar el i<j va a la derecha del implicaLuego o es lo mismo ??
-    lo marque en el ejercicio como va. despues mirarlo.
-    - en el 11 preguntar por el vector de opciones.
-    - en la busqueda criterios para filtrar. acomodar bien.
-
-Teorica
-  en el single responsability principle: debo tener un archivo que haga de union
-    de las distintas responsabilidades?
-
-practica 8
-  2. f5
-    crear un vector de 0 de largo n implica n operaciones elementales?
-    O(n+m) es lo maximo a lo que se puede llegar?
-
-  4. la cantidad de apariciones no se me ocurre como calcularla.
-    entiendo que entre los 2 while cubren |v|, osea que la complejidad va a ser O(n),
-    pero no se como calcularla.
-  
