@@ -9,7 +9,7 @@
 #include <iostream>
 using namespace std;
 
-vector<char> leerDatos(string s);
+vector<char> leerDatos(const string& s);
 
 int leerLargoReal(string filename);
 
