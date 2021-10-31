@@ -1,3 +1,5 @@
+#include <fstream>
+#include <iostream>
 #include "ejercicios.h"
 
 using namespace std;
@@ -52,11 +54,13 @@ vector<int> construir_vector(int n, string disposicion){
 }
 
 bool hayDuplicados (vector<int>& v){
-    bool res = false ; int i = 0; int j = 0;
+    bool res = false ;
+    int i = 0;
+    int j = 0;
 
-    while ( i < v . size ()){
+    while ( i < v . size () && res == false){
         j = 0;
-        while ( j < v . size ()){
+        while ( j < v . size () && res == false){
             if ( i != j && v [ i ] == v [ j ]){
                 res = true ;
             }
@@ -67,6 +71,7 @@ bool hayDuplicados (vector<int>& v){
 
     return res;
 }
+
 
 
 bool busqueda_binaria(vector<int> &s, int x) {
@@ -101,4 +106,3 @@ bool aux(vector<int>& vec, int i, int sum)
     bool prueba2 = aux(vec, i - 1, sum);
     return prueba1 || prueba2;
 }
-
