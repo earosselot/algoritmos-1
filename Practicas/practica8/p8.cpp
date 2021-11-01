@@ -267,4 +267,184 @@ bool esTriangular(vector<vector<int>> &m) {
 
 // Ejercicio 9 -----------------------------------------------
 
+// a. Pre { |m1|[0] = |m2| }
 
+// b. 
+
+vector<vector<int>> multiplicar(vector<vector<int>> &m1, vector<vector<int>> &m2) {
+  vector<vector<int>> res(m1.size(), m2[0].size());
+  for (int i = 0; i < m1.size(); i++)
+  {
+    for (int j = 0; j < m2[0].size(); j++) {
+      for (int k = 0; k < m2.size(); k++) {
+        res[i][j] = m1[i][k] * m2[k][j];
+      }
+    }
+  }
+}
+
+// c. tiempo de ejecucion
+//    a. Es n^3 pero variando alguna constante.
+//    b. La complejidad es O(n^3)
+
+
+
+// Ejercicio 10 ----------------------------------------------
+
+
+// 1, O(n^4)
+
+// 2. 
+void sumasAcumuladas(vector<vector<int>> &mat, int N) {
+  for (int i = 0; i < mat.size(); i++) {
+    for (int j = 0; i < mat[0].size(); j++) {
+      if (i > 0 && j == 0) {
+        mat[i][j] = mat[i][j] + mat[i - 1][N - 1];
+      } else if (j > 0) {
+        mat[i][j] = mat[i][j] + mat[i][j-1]
+      }
+    }
+  }
+}
+
+
+
+// Ejercicio 11 ----------------------------------------------
+
+
+int imparesConsecutivos(vector<int> &s) {
+  int consecutivos = 0;
+  int maxConsecutivos = 0;
+  for (int i = 0; i < s.size(); i++)
+  {
+    if (s[i] % 2 == 1) {
+      consecutivos++;
+    } else {
+      consecutivos = 0;
+    }
+    if (consecutivos > maxConsecutivos) {
+      maxConsecutivos = consecutivos;
+    }
+  }
+  return maxConsecutivos;
+}
+
+
+
+// Ejercicio 12 ----------------------------------------------
+
+
+vector<int> restarAcumulado(vector<int> &s, int x) {
+  vector<int> res(s.size());
+  vector<int> acum(s.size());
+  
+  acum[0] = s[0];
+  for (int i = 1; i < acum.size(); i++)
+  {
+    acum[i] = s[i] + acum[i - 1];
+  }
+
+  for (int i = 0; i < res.size(); i++) {
+    res[i] = x - acum[i];
+  }
+
+  return res;
+}
+
+
+
+
+// Ejercicio 13 ----------------------------------------------
+
+
+// 2 4 5
+// 3 5 6
+// 2 1 3
+
+// 11 13 14
+// 9 9 9
+// 6 4 3 
+
+int calcularMenorCosto(vector<vector<int>> &mat) {
+  vector<vector<int>> costos(mat.size(), mat[0].size());
+  costos[mat.size() - 1][mat[0].size() - 1] = mat[mat.size() - 1][mat[0].size() - 1];
+  for (int i = mat.size() - 1; i >= 0; i--)
+  {
+    for (int j = mat[0].size() - 1; j >= 0; j--) {
+      if (i < mat.size() - 1 && j < mat[0].size() - 1) {
+        costos[i][j] = mat[i][j] + min(costos[i][j+1], costos[i+1][j])
+      } else if (i == mat.size() - 1 && j < mat[0].size() - 1) {
+        costos[i][j] = mat[i][j] + costos[i][j + 1];
+      } else if (i < mat.size() && j == mat[0].size() - 1) {
+        costos[i][j] = mat[i][j] + costos[i + 1][j];
+      }
+    }
+  }
+  return costos[0][0]
+}
+
+
+
+// Ejercicio 14 ----------------------------------------------
+
+// a.
+
+vector<vector<int>> potenciaMatrices(<vector<vector<int>> &m, int pot) {
+  vector<vector<int>> res = m;
+  for (int k = 1; k < pot; k++) {
+    res = multiplicar(res, m);     // O(n^3)
+  }
+  return res;
+}
+
+// La complejidad sigue siendo O(n^3)
+
+// b.
+vector<vector<int>> potenciaMatrices2(<vector<vector<int>> &m, int pot) {
+  vector<vector<int>> res = m;
+  float times = log2(pot);
+
+  for (int k = 1; k <= times; k++) {
+    res = multiplicar(res, res);     // O(n^3)
+  }
+  return res;
+}
+
+// Los dos tienen complejidad O(n^3)
+
+
+// Ejercicio 15 ----------------------------------------------
+
+// Dada una matriz de booleanos de n filas y m columnas con n impar.  
+//  Se sabe que hay exactamente una fila que no esta repetida, y el resto
+//  se encuentra exactamente dos veces en la matriz.
+
+// a. Escribir un programa que devuelva un vector con los valores de la fila que no se repite. 
+//      ¿Cual es su tiempo de ejecucion de peor caso descripto ?
+
+vector<int> buscarFilaUnica(vector<vector<int>> &m) {     // n filas   m columnas
+  vector<int> filasBinarias;                              // 1
+  for (int i = 0; i < m.size(); i++) {                    // 3, n veces
+    int filaBinaria = 0;                                    // 1
+    for (int j = 0; j < m[0].size(); j++)                     // 3, m veces
+    {
+      if (m[i][j])                                            // 1
+        filaBinaria += 1 * pow(10, j);                        // 1
+    }                                                         // t(m) = 5m
+    filasBinarias.push_back(filaBinaria);                   // 1
+  }                                                       // t(m, n) = 5n * 5m   
+
+  int filaUnica = 0;                                      // 1
+  for (int i = 0; i < filasBinarias.size(); i++)          // 3, n veces 
+  {
+    bool unica = true;                                      // 1
+    for (int j = i + 1; j < filasBinarias.size(); j++) {    // 3, n veces
+      unica = unica && !(filasBinarias[i] - filasBinarias[j] == 0)  // 1
+    }                                                       // t(n) = 3n
+    if (unica)                                            // 1
+      filaUnica = i;                                      // 1
+  }                                                       // t(n) = 3n * 3n
+  return filaUnica;
+}                                                         // t(n, n) = 9(n^2) + 5(nm)
+
+// La complejidad es O(n^2) considerando la cantidad de elementos
