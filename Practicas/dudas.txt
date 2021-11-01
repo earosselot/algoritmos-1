@@ -5,3 +5,10 @@ Labo7
       testing::InitGoogleTest(&argc, argv);
     }
 
+Practica 8
+
+  Ej 5, a cantApariciones() le falta el return
+
+  Ej 7.c como se hace ?
+
+  

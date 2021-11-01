@@ -131,3 +131,140 @@ void f5(vector<int> &v1, vector<int> &v2)  // n = |v1|, m = |v2|
 
 // Ejercicio 5
 
+vector<int> hacerALgo(vector<int> &v) {           // n = |v|
+  vector<int> res;
+  for (int i = 0; i < 100; i++) {                 // t(n) = 100
+    res.push_back(contarApariciones(v, i + 1));
+  }
+  return res;
+};
+
+int contarApariciones(vector<int> &v, int elem) {  
+  int cantAp = 0;
+  for (int i = 0; i < v.size(); i++) {            // t(n) = n
+    if (v[i] == elem) {
+      cantAp++;
+    }
+  }
+  return cantAp;
+};
+
+// la complejidad es O(n)
+
+// Ejercicio 6
+
+bool f(vector<float> s) {
+  float p;
+  float res = 0;
+  for (int i = 0; i < s.size(); i++) {
+    p = productoriaDelVector(h(s, i));
+    if(p > res) {
+      res = p;
+    }
+  }
+  return res;
+}
+
+float productoriaDelVector(vector<float> v) {
+  float prod = 1;
+  for (int i = 0; i < v.size(); i++) {
+    prod = prod * v[i];
+  }
+  return prod;
+}
+
+// Devuelve los primeros n elementos no negativos o los primeros elementos no negativos
+vector<float> h(vector<float> w, int n) {
+  vector<float> res;
+  int i = 0;
+  while (i < n && w[i] > 0) {
+    res.push_back(w[i]);
+    i++;
+  }
+  return res;
+}
+
+// 1. Devuelve la mayor de las productorias de numeros positivos arrancando desde el
+//      principio del vector.
+
+// 2. O(n) en el peor caso que es que w[i] > 0 siempre se cumpla y que n = |w|.
+
+// 3. Peor caso #1: w = [1, 2, 3, 34, 4, 5, 3, 2, 0.5], n = 9. Este caso cumple 
+//      con la guarda la mayor cantidad de veces posible sin indefinirse.
+//    Mejor caso #1: w = [-1, 2, 3, 4, 5], n = 5. En este caso la guarda no se cumple nunca.
+//    Mejor caso #2: w = [1, 2, 3, 4, 5], n = 0. En este caso la gaurda tampoco se cumple nunca.
+
+// 4. g tiene complejidad O(n). recorre todos los elementos de un vector.
+//    h tiene complijidad O(n) tambien. 
+//    f hace n iteraciones de 2 funciones O(n), es decir n * (2 O(n)) = O(n**2)
+//      tiene complejidad O(n**2)
+
+
+
+// Ejercicio 7 -----------------------------------------------
+
+// a. tiene tiempo de ejecucion log(n)
+
+// b. no
+
+// c. hay una formula, pero no lo entendi.
+
+
+
+// Ejercicio 8 -----------------------------------------------
+
+int determinanteTriangular(vector<vector<int>> &m) {
+  int res = 1;
+  for (int i = 0; i < m.size(); i++) {
+    res = res * m[i][i];
+  }
+  return res;
+}
+
+bool esTriangSup(vector<vector<int>> &m) {
+  bool res = true;
+  for (int i = 0; i < m.size() - 1; i++)
+  {
+    for (int j = i + 1; j < m.size(); j++) 
+    {
+      res = res && m[i][j] == 0;
+    }
+  }
+  return res;
+}
+
+bool esTriangInf(vector<vector<int>> &m) {
+  bool res = true;
+  for (int i = 1; i < m.size(); i++)
+  {
+    for (int j = 0; j < i; j++) 
+    {
+      res = res && m[i][j] == 0;
+    }
+  }
+  return res;
+}
+
+bool esTriangular(vector<vector<int>> &m) {
+  return esTriangSup(m) || esTriangInf(m);
+}
+
+// c. a. En funcion de la cantidad de elementos de la matriz (n):
+//          - determinanteTriangular se ejecuta 1 vez por cada fila, m es de NxN elementos
+//            la complejidad es O(sqrt(n));
+//          - esTriangular tiene ciclos que recorren una vez cada elemento, excepto los de la
+//              diagonal. Tiene complejidad O(n).
+//    b. En funcion de la cantidad de filas de la matriz.
+//          - determinanteTriangular se ejecuta 1 vez por cada fila.
+//            la complejidad es O(n).
+//          - esTriangular tiene ciclos que recorren una vez cada elemento. A medida que la
+//              matriz aumenta la cantidad de filas tambien aumenta la cantidad de columnas
+//              porque es cuadrada. Este aumento es cuadratico con respecto a la cantidad de
+//              filas. La complejidad es O(n^2).
+
+
+
+
+// Ejercicio 9 -----------------------------------------------
+
+
