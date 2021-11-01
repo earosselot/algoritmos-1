@@ -11,4 +11,6 @@ Practica 8
 
   Ej 7.c como se hace ?
 
-  
+  Ej 14.b los dos tienen complejidad n^3 ?
+
+  Ej 15.c. tiene que cumplir las restricciones del b tambien??
