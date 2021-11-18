@@ -1,0 +1,117 @@
+Ej 4
+
+0 0 0 0 0 1 1
+0 1 2 3 4 5 6
+i     m     f
+      i m   f
+        i m f
+
+ini = 0  3  4
+fin = 6  6  6
+med = 3  4  5  // medio cumple la condicion
+
+salida esperada = 5 // Me interesa encontrar el primer 1.
+
+condicion:
+    v[i] == 1 && v[i-1] == 0
+
+-------------------------------------------
+
+0 1 1 1 1 1 1
+0 1 2 3 4 5 6
+i     m     f
+i m   f
+
+
+ini = 0 0
+fin = 6 3
+med = 3 1 // cumple la condicion
+
+-------------------------------------------
+
+1  1 1 1 1 1 1
+0  1 2 3 4 5 6
+i      m     f
+i  m   f
+im f
+
+ini = 0  0  0
+fin = 6  3  1
+med = 3  1  0   // es el que busco, pero se infdefine la condicion
+
+salida esperada = 0
+
+
+-------------------------------------------
+-------------------------------------------
+-------------------------------------------
+
+Ej 4 Otro encare
+
+0 0 0 0 0 1 1
+0 1 2 3 4 5 6
+i     m     f
+        i m f
+        i m f
+
+ini = 0  4
+fin = 6  6
+med = 3  5 // medio cumple la condicion
+
+salida esperada = 5 // Me interesa encontrar el primer 1.
+
+condicion:
+    v[i] == 1 && v[i-1] == 0
+
+-------------------------------------------
+
+0 1 1 1 1 1 1
+0 1 2 3 4 5 6
+i     m     f
+i m f
+
+
+ini = 0 0
+fin = 6 2
+med = 3 1 // cumple la condicion
+
+-------------------------------------------
+
+1  1 1 1 1 1 1
+0  1 2 3 4 5 6
+i      m     f
+i  m f
+im f
+
+ini = 0  0  0
+fin = 6  2  0
+med = 3  1  0   // es el que busco, pero se infdefine la condicion
+
+salida esperada = 0
+
+-------------------------------------------
+
+0 0 0 0 0 0 1
+0 1 2 3 4 5 6
+i     m     f
+        i m f
+
+ini = 0  4  6
+fin = 6  6  6
+med = 3  5
+
+salida esperada = 0
+
+-------------------------------------------
+
+0 0 0 0 0 0   0
+0 1 2 3 4 5   6
+i     m       f
+        i m   f
+             imf
+
+ini = 0  4  6
+fin = 6  6  6
+med = 3  5  6
+
+salida esperada = 0

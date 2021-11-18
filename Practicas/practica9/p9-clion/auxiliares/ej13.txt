@@ -1,0 +1,19 @@
+comparaciones y asignaciones
+
+1 2 3 4 5
+selection = 6*5
+insertion = 4
+   bubble = 5^2
+
+
+selection
+for i=0;5
+    busco el min
+    swapeo
+
+insertion
+for i=1;5
+    comparo y swapeo con el anterior hasta ubicarlo
+
+5,4,3,2,1
+selection = 6*5

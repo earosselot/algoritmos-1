@@ -211,6 +211,8 @@ vector<float> h(vector<float> w, int n) {
 
 
 
+
+
 // Ejercicio 8 -----------------------------------------------
 
 int determinanteTriangular(vector<vector<int>> &m) {
@@ -422,29 +424,42 @@ vector<vector<int>> potenciaMatrices2(<vector<vector<int>> &m, int pot) {
 // a. Escribir un programa que devuelva un vector con los valores de la fila que no se repite. 
 //      ¿Cual es su tiempo de ejecucion de peor caso descripto ?
 
-vector<int> buscarFilaUnica(vector<vector<int>> &m) {     // n filas   m columnas
-  vector<int> filasBinarias;                              // 1
-  for (int i = 0; i < m.size(); i++) {                    // 3, n veces
-    int filaBinaria = 0;                                    // 1
-    for (int j = 0; j < m[0].size(); j++)                     // 3, m veces
+vector<int> buscarFilaUnica(vector<vector<int>> &m) {                       // n filas   m columnas
+  vector<int> filasBinarias;                                                // 1
+  for (int i = 0; i < m.size(); i++) {                                      // 3, n veces
+    int filaBinaria = 0;                                                    // 1
+    for (int j = 0; j < m[0].size(); j++)                                   // 3, m veces
     {
-      if (m[i][j])                                            // 1
-        filaBinaria += 1 * pow(10, j);                        // 1
-    }                                                         // t(m) = 5m
-    filasBinarias.push_back(filaBinaria);                   // 1
-  }                                                       // t(m, n) = 5n * 5m   
+      if (m[i][j])                                                          // 1
+        filaBinaria += 1 * pow(10, j);                                      // 1
+    }                                                                       // t(m) = 5m
+    filasBinarias.push_back(filaBinaria);                                   // 1
+  }                                                                         // t(m, n) = 5n * 5m   
 
-  int filaUnica = 0;                                      // 1
-  for (int i = 0; i < filasBinarias.size(); i++)          // 3, n veces 
+  int filaUnica = 0;                                                        // 1
+  for (int i = 0; i < filasBinarias.size(); i++)                            // 3, n veces 
   {
-    bool unica = true;                                      // 1
-    for (int j = i + 1; j < filasBinarias.size(); j++) {    // 3, n veces
-      unica = unica && !(filasBinarias[i] - filasBinarias[j] == 0)  // 1
-    }                                                       // t(n) = 3n
-    if (unica)                                            // 1
-      filaUnica = i;                                      // 1
-  }                                                       // t(n) = 3n * 3n
-  return filaUnica;
-}                                                         // t(n, n) = 9(n^2) + 5(nm)
+    bool unica = true;                                                      // 1
+    for (int j = i + 1; j < filasBinarias.size(); j++) {                    // 3, n veces
+      unica = unica && !(filasBinarias[i] - filasBinarias[j] == 0)          // 1
+    }                                                                       // t(n) = 3n
+    if (unica)                                                              // 1
+      filaUnica = i;                                                        // 1
+  }                                                                         // t(n) = 3n * 3n
+  return m[filaUnica];
+}                                                                           // t(n, n) = 9(n^2) + 5(nm)
 
 // La complejidad es O(n^2) considerando la cantidad de elementos
+
+
+vector<bool> buscarFilaUnica(vector<vector<bool>> &m) {
+  vector<bool> filaUnica(m[0].size());
+  for (int j = 0; j < m[0].size(); j++)
+  {
+    for (int i = 0; i < m.size(); i++) {
+      filaUnica[j] = filaUnica[j] // COMPLETAR
+    }
+  }
+}
+
+// usar el xor por columnas; 

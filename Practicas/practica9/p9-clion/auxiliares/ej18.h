@@ -1,8 +1,10 @@
-//
-// Created by earosselot on 18/11/21.
-//
+#include <vector>
+
+using namespace std;
 
 #ifndef TPI_EJ18_H
 #define TPI_EJ18_H
+
+void ordenaLineal(vector<int> &v);
 
 #endif //TPI_EJ18_H

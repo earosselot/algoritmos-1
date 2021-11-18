@@ -4,13 +4,3 @@ Labo7
     int main(int argc, char **argv) {
       testing::InitGoogleTest(&argc, argv);
     }
-
-Practica 8
-
-  Ej 5, a cantApariciones() le falta el return
-
-  Ej 7.c como se hace ?
-
-  Ej 14.b los dos tienen complejidad n^3 ?
-
-  Ej 15.c. tiene que cumplir las restricciones del b tambien??

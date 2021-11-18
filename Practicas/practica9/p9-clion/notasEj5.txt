@@ -1,0 +1,49 @@
+    0  1   2   3   4
+---------------------
+0|  1  4   6   8   10
+1|  2  7   9   12  15
+2|  3  8   15  20  26
+3|  5  10  16  22  28
+
+elem = 22
+
+iniI = 0  2  3  3
+finI = 3  3  3  2
+medI = 1  2  3  F
+
+ini <= fin
+
+iniJ = 0  3  4  4
+finJ = 4  4  4  3
+medJ = 2  3  4  F
+
+
+elem == mat[medio] ? false
+  22 == 9          ? false
+  22 == 20         ? false
+  28 == 20         ? false
+
+elem <  mat[medio] ? false
+  22 <  9          ? false   => corro el inicio
+  22 < 20          ? flase   => corro el inicio
+  22 < 28          ? true    => corro el final
+
+
+--------------------------------------
+
+1  4  6  8
+2  7  9  12
+3  8 15  20
+
+iniI = 0
+finI = 2
+medI = 1
+
+iniJ = 0
+finJ = 3
+medJ = 1
+
+
+elem == mat[medio] ? false
+
+elem < mat[medio] ? true

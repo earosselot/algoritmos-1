@@ -8,6 +8,7 @@
     "utility": "cpp",
     "vector": "cpp",
     "deque": "cpp",
-    "string": "cpp"
+    "string": "cpp",
+    "tuple": "cpp"
   }
 }
