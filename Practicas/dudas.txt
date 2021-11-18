@@ -1,6 +1,0 @@
-Labo7
-  donde hay que convertir las test a Gtest. la funcion main recibe unos argumentos
-  que se usan para inicializar los test, que son??
-    int main(int argc, char **argv) {
-      testing::InitGoogleTest(&argc, argv);
-    }
